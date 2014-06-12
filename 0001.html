@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+ 	<title>Three.js 0001</title>
+  	<meta charset="utf-8">
+</head>
+<body style="margin: 0;">
+ 
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
+
+	<script src="obj_loader.js"></script>
+
+  	<script>
+ 
+
+	var x = null;
+
+ 	var app = function(){
+
+		this.width;
+		this.height;
+
+		this.scene;
+		this.camera;
+		this.renderer;
+
+		this.spotlight;
+
+		this.init = function() {
+ 
+    		// scene
+    		this.scene = new THREE.Scene();
+    		this.width = window.innerWidth;
+    		this.height = window.innerHeight;
+
+    		//renderer
+    		this.renderer = new THREE.WebGLRenderer({antialias:true});
+    		this.renderer.setSize(this.width, this.height);
+    		document.body.appendChild(this.renderer.domElement);
+ 
+    		// camers - view
+    		this.camera = new THREE.PerspectiveCamera(45, this.WIDTH / this.HEIGHT, 0.1, 20000);
+    		this.camera.position.set(0,6,0);
+    		this.scene.add(this.camera);
+
+			// add subtle blue ambient lighting
+			//var ambientLight = new THREE.AmbientLight(0x000044);
+			//this.scene.add(ambientLight);
+
+    		//lights
+    		this.renderer.setClearColor(0x333F47, 1);
+ 
+    		// Create a light, set its position, and add it to the scene.
+    		this.spotlight = new THREE.PointLight(0xffffff);
+    		this.spotlight.position.set(-100,200,100);
+    		this.scene.add(this.spotlight);
+
+
+			var manager = new THREE.LoadingManager();
+			manager.onProgress = function ( item, loaded, total ) {
+				console.log( item, loaded, total );
+			};
+
+			var material = new THREE.MeshLambertMaterial({color: 0xFF000000});
+
+			// Load a model into the scene
+			var loader = new THREE.OBJLoader( manager );
+
+			loader.load( 'teapot.obj', function ( object ) { 
+
+				console.log(x);
+				
+				object.traverse( function ( child ) {
+					if ( child instanceof THREE.Mesh ) {
+						child.material.map = material;
+						//child.material.map = new THREE.MeshLambertMaterial( { ambient: 0xFF000000 } );
+						//child.material.color.setRGB (1, 0, 0);
+					}
+				});
+
+				object.position.set(0,0,-10000);
+
+				x.scene.add( object );
+
+			});
+
+
+			// create object
+			//var obj_form        = new THREE.BoxGeometry(250,250,250);
+			//var obj_material    = new THREE.MeshLambertMaterial( { ambient: 0xFF000000 } );
+
+			//obj        = new THREE.Mesh(obj_form, obj_material);
+			//obj.position.set(0,0,-100);
+
+			//this.scene.add(obj);
+
+			//var cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshLambertMaterial({color: 'blue' }));
+			//this.scene.add(cube);
+
+			this.renderer.render( this.scene, this.camera );
+		};
+ 	}
+ 	
+ 	x = new app();
+
+ 	x.init();
+
+	window.onresize = function(event) {
+
+		x.width = window.innerWidth;
+		x.height = window.innerHeight;
+		x.renderer.setSize(x.width, x.height);
+		x.camera.aspect = x.width / x.height;
+		x.camera.updateProjectionMatrix();
+
+	};
+
+ 
+  	</script>
+ 
+</body>
+</html>

@@ -1,0 +1,10 @@
+simple server python
+
+python -m SimpleHTTPServer
+
+http://0.0.0.0:8000/0001.html
+
+http://stackoverflow.com/questions/8449716/cross-origin-requests-are-only-supported-for-http-but-its-not-cross-domain
+
+
+http://blog.teamtreehouse.com/the-beginners-guide-to-three-js
