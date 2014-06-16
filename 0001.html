@@ -13,7 +13,11 @@
 
 	<script src="/js/lib/obj_loader.js"></script>
 
-	<script src="/js/controls/orbit_controls.js"></script>
+	<!-- <script src="/js/controls/orbit_controls.js"></script> -->
+
+	<script src="/js/controls/threex.dragpancontrols.js"></script>
+
+	
 
   	<script>
  
@@ -57,7 +61,12 @@
 				this.camera.position.z = 350;
 
 				//controls
-				this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement);
+				//this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement);
+				this.controls = new THREEx.DragPanControls(this.camera);
+				this.controls.speedX	= 1.00;
+				this.controls.speedY	= 1.00;
+				
+
 
 				// add subtle blue ambient lighting
 				//var ambientLight = new THREE.AmbientLight();
