@@ -13,8 +13,7 @@
 
 	<script src="/js/lib/obj_loader.js"></script>
 
-	<!-- <script src="/js/controls/orbit_controls.js"></script> -->
-
+	<script src="/js/controls/orbit_controls.js"></script>
 	<script src="/js/controls/threex.dragpancontrols.js"></script>
 
 	
@@ -61,10 +60,10 @@
 				this.camera.position.z = 350;
 
 				//controls
-				//this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement);
-				this.controls = new THREEx.DragPanControls(this.camera);
-				this.controls.speedX	= 1.00;
-				this.controls.speedY	= 1.00;
+				this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement);
+				//this.controls = new THREEx.DragPanControls(this.camera);
+				//this.controls.speedX	= 1.00;
+				//this.controls.speedY	= 1.00;
 				
 
 
@@ -130,6 +129,7 @@
 
 			//annimateion loop
 			this.animate = function(){
+				x.earth.rotation.y += 0.001;
 				x.renderer.render( x.scene, x.camera );
 	  			x.controls.update();
 	  			requestAnimationFrame( x.animate );
