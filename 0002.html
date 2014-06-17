@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+ 	<title>Three.js 0002 - Simple room</title>
+  	<meta charset="utf-8">
+  	<style>
+		body{margin: 0px;overflow: hidden;position: fixed;}
+  	</style>
+</head>
+<body style="margin: 0;">
+ 
+	<div id="blocker">
+
+		<div id="instructions">
+			<span style="font-size:40px">Click to play</span>
+			<br />
+			(W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+		</div>
+
+	</div>
+
+	<script src="/js/lib/three.js"></script>
+
+	<script src="/js/controls/pointerlock-controls.js"></script>
+	
+  	<script>
+ 		
+ 		var App = {};
+
+	 	var app = function(){
+			this.width = null;
+			this.height = null;
+			this.camera = null;
+			this.renderer = null;
+			this.controls = null;
+	 	}
+	</script>
+
+	<script src="/js/helpers/pointer-lock-init.js"></script>
+
+	<script>
+
+	 	//init / setup
+		app.prototype.init = function() {
+ 			this.width = window.innerWidth;
+    		this.height = window.innerHeight;
+    	};
+
+    	//create renderer
+    	app.prototype.createRenderer = function(){
+			this.renderer = new THREE.WebGLRenderer({antialias:true});
+			this.renderer.setSize(this.width, this.height);
+			this.renderer.shadowMapEnabled = true;
+			document.body.appendChild(this.renderer.domElement);
+    	};
+
+    	//create the scene
+		app.prototype.createScene = function(){
+			this.scene = new THREE.Scene();
+			this.scene.fog = new THREE.Fog( 0xFF0000, 1500, 4000 );
+		}
+
+    	//add camera
+    	app.prototype.addCamera = function(){
+			this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000000);
+			this.camera.position.y = 150;
+			this.camera.position.z = 350;
+    	};
+
+    	//dircetional light
+    	app.prototype.addDirectionalLight = function(){
+			var light = new THREE.DirectionalLight( 0xffffff, 1 )
+			light.position.set(0,1,0)
+			this.scene.add( light )			
+			/*
+			light.castShadow	= true
+			light.shadowCameraNear	= 0.01
+			light.shadowCameraFar	= 15
+			light.shadowCameraFov	= 45
+
+			light.shadowCameraLeft	= -1
+			light.shadowCameraRight	=  1
+			light.shadowCameraTop	=  1
+			light.shadowCameraBottom= -1
+			light.shadowCameraVisible	= true
+
+			light.shadowBias	= 0.001
+			light.shadowDarkness	= 0.2
+			*/
+    	};
+
+    	//ambient light
+    	app.prototype.addAmbientLight = function(){
+			var ambientLight = new THREE.AmbientLight();
+			this.scene.add(ambientLight);
+    	}
+
+	 	//dom events
+		app.prototype.events = function(){
+			window.onresize = function(event) {
+				App.width = window.innerWidth;	
+				App.height = window.innerHeight;
+				App.renderer.setSize(App.width, App.height);
+				App.camera.aspect = App.width / App.height;
+				App.camera.updateProjectionMatrix();
+			};
+		};
+
+	 	//annimateion loop
+		app.prototype.animate = function(){
+			App.renderer.render( App.scene, App.camera );
+			App.controls.isOnObject( false );
+			App.controls.update();
+			requestAnimationFrame( App.animate );
+		};
+
+	 	//add controls
+	 	app.prototype.addControls = function(){
+			this.controls = new THREE.PointerLockControls(this.camera);
+			this.pointerlockInit();
+	 	}
+
+	 	//add a floor
+	 	app.prototype.addFloor = function(){
+	 		/*
+			var geometry = new THREE.PlaneGeometry( 600000000000, 6000000000000 );
+			var material = new THREE.MeshBasicMaterial({color: 0xFFFFFF});
+			var plane = new THREE.Mesh( geometry, material );
+			this.scene.add( plane );
+			*/
+
+			
+			// create the geometry sphere
+			var geometry  = new THREE.SphereGeometry(3000, 150, 150)
+			var material  = new THREE.MeshBasicMaterial()
+			material.map   = THREE.ImageUtils.loadTexture('/img/starfield.jpg')
+			material.side  = THREE.BackSide
+			var mesh  = new THREE.Mesh(geometry, material)
+			this.scene.add(mesh);
+			
+	 	}
+
+	 	//create object and run
+	 	App = new app();
+
+	 	//must haves
+	 	App.events();
+	 	App.init();
+	 	App.createRenderer();
+	 	App.createScene();
+	 	App.addCamera();
+	 	
+	 	//scene objects
+	 	App.addAmbientLight();
+	 	App.addDirectionalLight();
+	 	App.addControls();
+	 	App.addFloor();
+
+	 	//render loop
+	 	App.animate();
+ 
+  	</script>
+
+
+ 
+</body>
+</html>
