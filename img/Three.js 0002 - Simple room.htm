@@ -1,6 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
+<!DOCTYPE html>
+<!-- saved from url=(0033)http://192.168.0.9:8080/0002.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
  	<title>Three.js 0002 - Simple room</title>
   	<meta charset="utf-8">
   	<style>
@@ -23,21 +23,21 @@
 		}
   	</style>
 </head>
-<body style="margin: 0;">
+<body style="margin: 0px;">
  
 	<div id="blocker">
 
 		<div id="instructions">
 			<span style="font-size:40px">Click to move</span>
-			<br />
+			<br>
 			(W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
 		</div>
 
 	</div>
 
-	<script src="/js/lib/three.js"></script>
+	<script src="./Three.js 0002 - Simple room_files/three.js"></script>
 
-	<script src="/js/controls/pointerlock-controls.js"></script>
+	<script src="./Three.js 0002 - Simple room_files/pointerlock-controls.js"></script>
 	
   	<script>
  		
@@ -54,7 +54,7 @@
 
 	</script>
 
-	<script src="/js/helpers/pointer-lock-init.js"></script>
+	<script src="./Three.js 0002 - Simple room_files/pointer-lock-init.js"></script>
 
 	<script>
 
@@ -111,23 +111,21 @@
 
 		//touching the skybox?
 		app.prototype.canMoveForward = function(){	
-
 			App.controls.canMoveForward = true;
+
 			App.ray.ray.origin.copy( App.controls.getObject().position );
 			var intersections = App.ray.intersectObject( App.skybox );
 
-			//just loaded = 0 0 0
-			if( App.controls.getObject().position.x === 0){
-
-			//has distance (not touching)	
-			}else if ( intersections.length > 0 ) {
+			if ( intersections.length > 0 ) {
 
 				var distance = intersections[ 0 ].distance;
+
+				console.log(distance)
 
 				if ( distance > -150 && distance < 150 ) {
 					App.controls.canMoveForward = false;
 				}
-			//no distance (not touching)
+
 			}else{
 				App.controls.canMoveForward = false;
 			}
@@ -174,7 +172,7 @@
 	 	app.prototype.addSkybox = function(){
 	 		
 	 		// create the geometry sphere
-			var geometry  = new THREE.SphereGeometry( (500*10), 100, 100)
+			var geometry  = new THREE.SphereGeometry( (500*10), 20, 20)
 			
 			var texture = THREE.ImageUtils.loadTexture('/img/starfield.jpg');
 				texture.wrapS = THREE.RepeatWrapping;
@@ -207,9 +205,9 @@
 	 	//render loop
 	 	App.animate();
  
-  	</script>
+  	</script><canvas width="1476" height="943" style="width: 2217px; height: 1417px;"></canvas>
 
 
  
-</body>
-</html>
+
+<div id="window-resizer-tooltip" style="display: block;"><a href="http://192.168.0.9:8080/0002.html#" title="Edit settings" style="background-image: url(chrome-extension://kkelicaakdanhinjdeammmilcgefonfh/images/icon_19.png);"></a><span class="tooltipTitle">Window size: </span><span class="tooltipWidth" id="winWidth">1920</span> x <span class="tooltipHeight" id="winHeight">1040</span><br><span class="tooltipTitle">Viewport size: </span><span class="tooltipWidth" id="vpWidth">2217</span> x <span class="tooltipHeight" id="vpHeight">1417</span></div></body></html>

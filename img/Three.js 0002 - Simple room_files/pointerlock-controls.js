@@ -155,9 +155,9 @@ THREE.PointerLockControls = function ( camera, App ) {
 		var time = performance.now(),
 			delta = ( time - prevTime ) / 1000;
 
-			velocity.x -= velocity.x * 10.0 * delta;
-			velocity.z -= velocity.z * 10.0 * delta;
-			velocity.y -= 9.8 * 100.0 * delta; 
+		velocity.x -= velocity.x * 10.0 * delta;
+		velocity.z -= velocity.z * 10.0 * delta;
+		velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
 		if ( moveForward && this.canMoveForward === true ) {
 			velocity.z -= ( 400.0 * this.speedMod.z ) * delta;
@@ -167,26 +167,30 @@ THREE.PointerLockControls = function ( camera, App ) {
 			velocity.z += ( 400.0 * this.speedMod.z ) *  delta;
 		}
 
-		if ( moveLeft ){
+		if ( moveLeft && this.canMoveForward === true){
 			velocity.x -= ( 400.0 * this.speedMod.x ) * delta;
 		}
 
-		if ( moveRight ){
+		if ( moveRight && this.canMoveForward === true ){
 			velocity.x += ( 400.0 * this.speedMod.x ) * delta;
 		}
+
 
 		if ( isOnObject === true ) {
 			velocity.y = Math.max( 0, velocity.y );
 		}
 
-			yawObject.translateX( velocity.x * delta );
-			yawObject.translateY( velocity.y * delta ); 
-			yawObject.translateZ( velocity.z * delta );
+		yawObject.translateX( velocity.x * delta );
+		yawObject.translateY( velocity.y * delta ); 
+		yawObject.translateZ( velocity.z * delta );
 
 		if ( yawObject.position.y < 10 ) {
+
 			velocity.y = 0;
 			yawObject.position.y = 10;
+
 			canJump = true;
+
 		}
 
 		prevTime = time;
