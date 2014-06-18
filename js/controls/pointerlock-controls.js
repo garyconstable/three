@@ -45,6 +45,8 @@ THREE.PointerLockControls = function ( camera ) {
 
 	var onKeyDown = function ( event ) {
 
+		//console.log( 'keydown: ' + event.keyCode );
+
 		switch ( event.keyCode ) {
 
 			case 38: // up
@@ -76,6 +78,8 @@ THREE.PointerLockControls = function ( camera ) {
 	};
 
 	var onKeyUp = function ( event ) {
+
+		//console.log( 'keyup: ' + event.keyCode );
 
 		switch( event.keyCode ) {
 
