@@ -2,18 +2,18 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE.PointerLockControls = function ( camera ) {
+THREE.PointerLockControls = function ( camera, App ) {
 
 	var scope = this;
 
-	camera.rotation.set( 0, 0, 0 );
+		camera.rotation.set( 0, 0, 0 );
 
 	var pitchObject = new THREE.Object3D();
-	pitchObject.add( camera );
+		pitchObject.add( camera );
 
 	var yawObject = new THREE.Object3D();
-	yawObject.position.y = 10;
-	yawObject.add( pitchObject );
+		yawObject.position.y = 10;
+		yawObject.add( pitchObject );
 
 	var moveForward = false;
 	var moveBackward = false;
@@ -28,6 +28,12 @@ THREE.PointerLockControls = function ( camera ) {
 	var velocity = new THREE.Vector3();
 
 	var PI_2 = Math.PI / 2;
+
+		this.speedMod = {
+			x: 1,
+			y: 1,
+			z: 1,
+		};
 
 	var onMouseMove = function ( event ) {
 
@@ -157,11 +163,19 @@ THREE.PointerLockControls = function ( camera ) {
 
 		velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-		if ( moveForward ) velocity.z -= 400.0 * delta;
-		if ( moveBackward ) velocity.z += 400.0 * delta;
+		if ( moveForward ) {
+			velocity.z -= ( 400.0 * this.speedMod.z ) * delta;
+			//App.floorObj.position.z -= 500 * delta;
+		}
 
-		if ( moveLeft ) velocity.x -= 400.0 * delta;
-		if ( moveRight ) velocity.x += 400.0 * delta;
+
+		if ( moveBackward ) {
+			velocity.z += ( 400.0 * this.speedMod.z ) *  delta;
+			//App.floorObj.position.z += 500 * delta;
+		}
+
+		if ( moveLeft ) velocity.x -= ( 400.0 * this.speedMod.x ) * delta;
+		if ( moveRight ) velocity.x += ( 400.0 * this.speedMod.x ) * delta;
 
 		if ( isOnObject === true ) {
 

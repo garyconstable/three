@@ -28,7 +28,7 @@
 	<div id="blocker">
 
 		<div id="instructions">
-			<span style="font-size:40px">Click to play</span>
+			<span style="font-size:40px">Click to move</span>
 			<br />
 			(W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
 		</div>
@@ -49,6 +49,7 @@
 			this.camera = null;
 			this.renderer = null;
 			this.controls = null;
+			this.floorObj = null;
 	 	}
 	</script>
 
@@ -132,7 +133,15 @@
 
 	 	//add controls
 	 	app.prototype.addControls = function(){
-			this.controls = new THREE.PointerLockControls(this.camera);
+			
+			this.controls = new THREE.PointerLockControls(this.camera, this);
+			//speed modifier (speed * x)
+			this.controls.speedMod = {
+				x: 8,
+				y: 1,
+				z: 15,
+			};
+
 			this.pointerlockInit();
 			this.scene.add( this.controls.getObject() );
 	 	}
@@ -140,44 +149,46 @@
 	 	//add a floor
 	 	app.prototype.addFloor = function(){
 	 		
-			var segments= 50 
-	  		var geometry = new THREE.PlaneGeometry(2000, 2000, segments, segments);
-	  			
-	  		var materialEven = new THREE.MeshBasicMaterial({
-	  			map : THREE.ImageUtils.loadTexture('/img/floor_tile_001.png'),
-	  			bumpMap: THREE.ImageUtils.loadTexture('/img/floor_tile_001.png'),
-				bumpScale: 10.0,
-	  		})
+			//png width = 768
+			var segments = 1,
+				wh = (500*20),
+				repeat = 20;
 
-	  		var materialOdd  = new THREE.MeshBasicMaterial({
-	  			map : THREE.ImageUtils.loadTexture('/img/floor_tile_001.png'),
-	  			bumpMap: THREE.ImageUtils.loadTexture('/img/floor_tile_001.png'),
-				bumpScale: 10.0,
-	  		})
+			var texture = THREE.ImageUtils.loadTexture('/img/floor_tile_001.png');
+				texture.wrapS = THREE.RepeatWrapping;
+				texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set( repeat, repeat );
+				//texture.needsUpdate = true;
 
-	  		var materials = [materialEven, materialOdd]
- 
-	  		for(var x =0; x<segments; x++){
-	    		for(var y = 0; y<segments; y++){ 		
-	      			i = x * segments + y
-	      			j = 2 * i
-	      			geometry.faces[ j ].materialIndex = geometry.faces[ j + 1 ].materialIndex = (x + y) % 2
-	      		}
-	      	}
- 			var plane = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
- 			plane.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-  			this.scene.add( plane );
+	  		var geometry = new THREE.PlaneGeometry(wh, wh, segments, segments);
+
+	      	var material = new THREE.MeshLambertMaterial({ 
+	      		map: texture,
+	      		color: 0x000000
+	      	});
+
+ 			this.floorObj = new THREE.Mesh(geometry, material);
+
+ 			this.floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+
+  			this.scene.add( this.floorObj );
 	 	}
 
 	 	//sky box
 	 	app.prototype.addSkybox = function(){
+	 		
 	 		// create the geometry sphere
-			var geometry  = new THREE.SphereGeometry(3000, 150, 150)
-			var material  = new THREE.MeshBasicMaterial()
-			material.map   = THREE.ImageUtils.loadTexture('/img/starfield.jpg')
-			material.side  = THREE.BackSide
-			var mesh  = new THREE.Mesh(geometry, material)
-			this.scene.add(mesh);
+			var geometry  = new THREE.SphereGeometry( (500*10), 20, 20)
+			
+			var texture = THREE.ImageUtils.loadTexture('/img/starfield.jpg');
+				texture.wrapS = THREE.RepeatWrapping;
+
+			var material  = new THREE.MeshBasicMaterial({
+				map: texture,
+				side: THREE.BackSide
+			})
+
+			this.scene.add( new THREE.Mesh(geometry, material) );
 	 	}
 
 
@@ -193,8 +204,8 @@
 	 	App.addCamera();
 	 	
 	 	//scene objects
-	 	//App.addAmbientLight();
-	 	//App.addDirectionalLight();
+	 	App.addAmbientLight();
+	 	App.addDirectionalLight();
 	 	App.addControls();
 	 	App.addSkybox();
 	 	App.addFloor();
