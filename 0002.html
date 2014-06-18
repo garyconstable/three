@@ -69,7 +69,21 @@
 			this.renderer = new THREE.WebGLRenderer({antialias:true});
 			this.renderer.setSize(this.width, this.height);
 			this.renderer.shadowMapEnabled = true;
+
+			this.renderer.shadowMapEnabled = true;
+			this.renderer.shadowMapSoft = true;
+
+			this.renderer.shadowCameraNear = 3;
+			this.renderer.shadowCameraFar = 1000000;
+			this.renderer.shadowCameraFov = 50;
+
+			this.renderer.shadowMapBias = 0.0039;
+			this.renderer.shadowMapDarkness = 0.5;
+			this.renderer.shadowMapWidth = 1024;
+			this.renderer.shadowMapHeight = 1024;
+
 			document.body.appendChild(this.renderer.domElement);
+
     	};
 
     	//create the scene
@@ -87,8 +101,8 @@
 
     	//dircetional light
     	app.prototype.addDirectionalLight = function(){
-			var light = new THREE.DirectionalLight( 0xffffff, 1 )
-			light.position.set(0,1,0)
+			var light = new THREE.DirectionalLight( 0xffffff, 0.1)
+			light.position.set(1,1,0)
 			this.scene.add( light )			
     	};
 
@@ -164,7 +178,12 @@
 				texture.repeat.set( repeat, repeat );
 
 	  		var geometry = new THREE.PlaneGeometry(wh, wh, segments, segments);
-	      	var material = new THREE.MeshLambertMaterial({ map: texture, color: 0x000000 });
+	      	var material = new THREE.MeshLambertMaterial({ 
+		      		map: texture, 
+		      		//color: 0x000000
+		      		//ambient: 0xffffff,
+		      		//emissive: 0xffffff,
+		      	});
 	 			this.floorObj = new THREE.Mesh(geometry, material);
 	 			this.floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 	  			this.scene.add( this.floorObj );
@@ -179,7 +198,13 @@
 			var texture = THREE.ImageUtils.loadTexture('/img/starfield.jpg');
 				texture.wrapS = THREE.RepeatWrapping;
 
-			var material  = new THREE.MeshBasicMaterial({map: texture,side: THREE.BackSide})
+			var material  = new THREE.MeshLambertMaterial({
+					map: texture,
+					side: THREE.BackSide,
+					//color: 0x000000
+		      		//ambient: 0xffffff,
+		      		//emissive: 0xffffff,
+		      	})
 
 				this.skybox = new THREE.Mesh(geometry, material);
 				this.scene.add( this.skybox );

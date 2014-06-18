@@ -6,3 +6,5 @@ http://planetpixelemporium.com/earth.html
 http://learningthreejs.com/blog/2013/09/16/how-to-make-the-earth-in-webgl/
 
 http://home.oneiricworlds.com/2012/10/how-to-create-smart-tile-based-floor-in.html
+
+http://stackoverflow.com/questions/10742149/how-to-create-directional-light-shadow-in-three-js
