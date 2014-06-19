@@ -77,11 +77,10 @@
     	app.prototype.createRenderer = function(){
 			this.renderer = new THREE.WebGLRenderer({antialias:true});
 			this.renderer.setSize(this.width, this.height);
-			this.renderer.shadowMapEnabled = true;
-
+			
 			this.renderer.shadowMapEnabled = true;
 			this.renderer.shadowMapSoft = true;
-
+			/*
 			this.renderer.shadowCameraNear = 3;
 			this.renderer.shadowCameraFar = 1000000;
 			this.renderer.shadowCameraFov = 50;
@@ -90,7 +89,7 @@
 			this.renderer.shadowMapDarkness = 0.5;
 			this.renderer.shadowMapWidth = 1024;
 			this.renderer.shadowMapHeight = 1024;
-
+			*/
 			document.body.appendChild(this.renderer.domElement);
 
     	};
@@ -105,14 +104,39 @@
     	app.prototype.addCamera = function(){
 			this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000000);
 			this.camera.position.y = 150;
-			this.camera.position.z = 350;
+			this.camera.position.z = 700;
     	};
 
     	//dircetional light
     	app.prototype.addDirectionalLight = function(){
-			var light = new THREE.DirectionalLight( 0xffffff, 0.1)
-			light.position.set(1,1,0)
-			this.scene.add( light )			
+
+
+			var light = new THREE.DirectionalLight(0xdfebff, 1);
+				light.position.set(1000, 800, 700);
+
+				light.position.multiplyScalar(1);
+
+				light.castShadow = true;
+				light.shadowCameraVisible = true;
+
+				light.shadowMapWidth = 512;
+				light.shadowMapHeight = 512;
+
+			/*	
+			var d = 150;
+
+				light.shadowCameraLeft = -d;
+				light.shadowCameraRight = d;
+				light.shadowCameraTop = d;
+				light.shadowCameraBottom = -d;
+
+				
+			*/
+
+			light.shadowCameraFar = 2000;
+			light.shadowCameraFov = 50;
+			light.shadowDarkness = 0.8;
+			this.scene.add(light);
     	};
 
     	//ambient light
@@ -132,52 +156,10 @@
 			};
 		};
 
-		//touching the skybox?
-		app.prototype.canMoveForward = function(){	
-
-			//console.log(App.sceneObjContainer)
-
-			App.controls.canMoveForward = true;
-			App.ray.ray.origin.copy( App.controls.getObject().position );
-
-			//boundary sphere
-			var intersections = App.ray.intersectObjects( App.sceneObjContainer );
-
-			//just loaded = 0 0 0
-			if( App.controls.getObject().position.x === 0){
-
-			//has distance (not touching)	
-			}else{
-
-				if ( intersections.length > 0 ) {
-
-					var c = 0;
-					
-					intersections.forEach(function(x) {
-
-						var distance = intersections[ c ].distance;
-
-						console.log(distance);
-
-						if ( distance > -150 && distance < 150 ) {
-							App.controls.canMoveForward = false;
-						}
-
-						c++;
-					});
-
-				//no distance (not touching)
-				}else{
-					App.controls.canMoveForward = false;
-				}
-			}
-
-
-
-		}
-
 	 	//annim loop
 		app.prototype.animate = function(){
+
+			//App.scene.updateMatrixWorld();
 			App.canMoveForward();
 			App.controls.update();
 			App.renderer.render( App.scene, App.camera );
@@ -209,12 +191,14 @@
 	  		var geometry = new THREE.PlaneGeometry(wh, wh, segments, segments);
 	      	var material = new THREE.MeshLambertMaterial({ 
 		      		map: texture, 
-		      		//color: 0x000000
+		      		color: 0xdfebff
 		      		//ambient: 0xffffff,
 		      		//emissive: 0xffffff,
 		      	});
 	 			this.floorObj = new THREE.Mesh(geometry, material);
+	 			this.floorObj.position.y = 0;
 	 			this.floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+				this.floorObj.receiveShadow = true;
 	  			this.scene.add( this.floorObj );
 	 	}
 
@@ -235,21 +219,57 @@
 		      		//emissive: 0xffffff,
 		      	})
 
-				this.skybox = new THREE.Mesh(geometry, material);
-				this.scene.add( this.skybox );
-				this.sceneObjContainer.push(this.skybox);
+			var skybox = new THREE.Mesh(geometry, material);
+				this.scene.add( skybox );
+				this.sceneObjContainer.push( skybox );
 	 	}
 
 
 	 	app.prototype.addTestBox = function(){
- 			var cube = new THREE.Mesh( new THREE.BoxGeometry( 200, 200, 200 ), new THREE.MeshNormalMaterial() );
+
+
+			var texture = THREE.ImageUtils.loadTexture('/img/crate.jpg');
+				texture.wrapS = THREE.RepeatWrapping;
+
+	 		var geometry  = new THREE.BoxGeometry( 200, 200, 200)
+
+	 		var material = new THREE.MeshBasicMaterial({
+				map: texture,
+				side:  THREE.DoubleSide,
+				color: 0x666666
+	 		});
+
+ 			var cube = new THREE.Mesh( geometry, material  );
 				cube.position.y = 100;
+				cube.castShadow = true;
+
+
 				this.scene.add( cube );
-				this.sceneObjContainer.push(cube);
+				this.sceneObjContainer.push( cube );
+ 		}
 
-	 	}
+	 	//touching the skybox?
+		app.prototype.canMoveForward = function(){				
+			
+			this.controls.canMoveForward = true;
+
+			this.ray.ray.origin.copy( this.controls.getObject().position );
+
+			var intersections = this.ray.intersectObjects( this.sceneObjContainer );
 
 
+			if ( intersections.length > 0 ) {
+
+				var distance = intersections[ 0 ].distance;
+
+				console.log( distance );
+
+				//if ( distance > -150 && distance < 150 ) {
+				//	App.controls.canMoveForward = false;
+				//}
+				//App.controls.canMoveForward = false;
+			}
+		}
 
 	 	//create object and run
 	 	App = new app();
@@ -262,13 +282,17 @@
 	 	App.addCamera();
 	 	
 	 	//scene objects
-	 	App.addAmbientLight();
+	 	//App.addAmbientLight();
 	 	App.addDirectionalLight();
 	 	App.addControls();
 	 	App.addSkybox();
 	 	App.addFloor();
 
+	 	//test box
 	 	App.addTestBox();
+
+	 	
+	 	
 
 	 	//render loop
 	 	App.animate();
