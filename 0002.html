@@ -44,12 +44,21 @@
  		var App = {};
 
 	 	var app = function(){
+			
+
+			//scene must haves 
 			this.width = null;
 			this.height = null;
 			this.camera = null;
 			this.renderer = null;
 			this.controls = null;
+			
+			//other objects
 			this.floorObj = null;
+
+			//containers
+			this.sceneObjContainer = [];
+
 	 	}
 
 	</script>
@@ -126,25 +135,45 @@
 		//touching the skybox?
 		app.prototype.canMoveForward = function(){	
 
+			//console.log(App.sceneObjContainer)
+
 			App.controls.canMoveForward = true;
 			App.ray.ray.origin.copy( App.controls.getObject().position );
-			var intersections = App.ray.intersectObject( App.skybox );
+
+			//boundary sphere
+			var intersections = App.ray.intersectObjects( App.sceneObjContainer );
 
 			//just loaded = 0 0 0
 			if( App.controls.getObject().position.x === 0){
 
 			//has distance (not touching)	
-			}else if ( intersections.length > 0 ) {
+			}else{
 
-				var distance = intersections[ 0 ].distance;
+				if ( intersections.length > 0 ) {
 
-				if ( distance > -150 && distance < 150 ) {
+					var c = 0;
+					
+					intersections.forEach(function(x) {
+
+						var distance = intersections[ c ].distance;
+
+						console.log(distance);
+
+						if ( distance > -150 && distance < 150 ) {
+							App.controls.canMoveForward = false;
+						}
+
+						c++;
+					});
+
+				//no distance (not touching)
+				}else{
 					App.controls.canMoveForward = false;
 				}
-			//no distance (not touching)
-			}else{
-				App.controls.canMoveForward = false;
 			}
+
+
+
 		}
 
 	 	//annim loop
@@ -208,6 +237,16 @@
 
 				this.skybox = new THREE.Mesh(geometry, material);
 				this.scene.add( this.skybox );
+				this.sceneObjContainer.push(this.skybox);
+	 	}
+
+
+	 	app.prototype.addTestBox = function(){
+ 			var cube = new THREE.Mesh( new THREE.BoxGeometry( 200, 200, 200 ), new THREE.MeshNormalMaterial() );
+				cube.position.y = 100;
+				this.scene.add( cube );
+				this.sceneObjContainer.push(cube);
+
 	 	}
 
 
@@ -228,6 +267,8 @@
 	 	App.addControls();
 	 	App.addSkybox();
 	 	App.addFloor();
+
+	 	App.addTestBox();
 
 	 	//render loop
 	 	App.animate();
