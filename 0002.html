@@ -37,18 +37,25 @@
 
 	<script src="/js/lib/three.js"></script>
 
+	<script src="/js/lib/app-base.js"></script>
+
 	<script src="/js/controls/pointerlock-controls.js"></script>
+
+	<script src="/js/helpers/pointer-lock-init.js"></script>
+
+	<script src="/js/maps/map-0001.js"></script>
 	
   	<script>
  		
- 		var App = {};
+ 		'use strict';
 
-	 	var app = function(){
-			
+	 	//init / setup
+		app.prototype.init = function() {
 
-			//scene must haves 
-			this.width = null;
-			this.height = null;
+    		//scene must haves 
+			this.width = window.innerWidth;
+    		this.height = window.innerHeight;
+
 			this.camera = null;
 			this.renderer = null;
 			this.controls = null;
@@ -58,20 +65,8 @@
 
 			//containers
 			this.sceneObjContainer = [];
-
-	 	}
-
-	</script>
-
-	<script src="/js/helpers/pointer-lock-init.js"></script>
-
-	<script>
-
-	 	//init / setup
-		app.prototype.init = function() {
- 			this.width = window.innerWidth;
-    		this.height = window.innerHeight;
     	};
+
 
     	//create renderer
     	app.prototype.createRenderer = function(){
@@ -204,7 +199,7 @@
 
 	 	//sky box
 	 	app.prototype.addSkybox = function(){
-	 		
+
 	 		// create the geometry sphere
 			var geometry  = new THREE.SphereGeometry( (500*10), 100, 100)
 			
@@ -271,35 +266,42 @@
 			}
 		}
 
+		app.prototype.loadWorld = function(){
+
+			//must haves
+			this.events();
+			this.init();
+			this.createRenderer();
+			this.createScene();
+			this.addCamera();
+
+			//scene objects
+			//App.addAmbientLight();
+			this.addDirectionalLight();
+			this.addControls();
+			this.addSkybox();
+			this.addFloor();
+
+			this.loadMap();
+
+			//test box
+			this.addTestBox();
+			return this;
+		}
+
+
+
 	 	//create object and run
-	 	App = new app();
+	 	App = new app().loadWorld();
 
-	 	//must haves
-	 	App.events();
-	 	App.init();
-	 	App.createRenderer();
-	 	App.createScene();
-	 	App.addCamera();
-	 	
-	 	//scene objects
-	 	//App.addAmbientLight();
-	 	App.addDirectionalLight();
-	 	App.addControls();
-	 	App.addSkybox();
-	 	App.addFloor();
-
-	 	//test box
-	 	App.addTestBox();
-
-	 	
-	 	
+	 	//A info - world / app obj
+	 	console.log(App);
 
 	 	//render loop
-	 	App.animate();
+		App.animate();
+
  
   	</script>
-
-
  
 </body>
 </html>
