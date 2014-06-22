@@ -7,21 +7,26 @@
 
 	app.prototype.loadMap = function() {
 		
-		var WALLHEIGHT = 600;
+		var WALLHEIGHT = 1200;
 
 		var UNITSIZE = 1000;
 
+		var texture_1 = THREE.ImageUtils.loadTexture('/img/stone-0001.jpg');
+		 	texture_1.wrapS = THREE.RepeatWrapping;
+
 		var materials = [
 			new THREE.MeshLambertMaterial({
-				//map: t.ImageUtils.loadTexture('images/wall-1.jpg')
+				map: texture_1,
+				side:  THREE.DoubleSide	
 			}),
 			new THREE.MeshLambertMaterial({
-				//map: t.ImageUtils.loadTexture('images/wall-2.jpg')
+				map: texture_1,
+				side:  THREE.DoubleSide
 			}),
          ];
 
 		var cube = new THREE.BoxGeometry(UNITSIZE, WALLHEIGHT, UNITSIZE);
-
+		/*
 		var map = [ // 1  2  3  4  5  6  7  8  9
 	           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 0
 	           [1, 1, 0, 0, 0, 0, 0, 1, 1, 1,], // 1
@@ -34,6 +39,19 @@
 	           [1, 1, 1, 1, 1, 1, 0, 0, 1, 1,], // 8
 	           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 9
 	           ], mapW = map.length, mapH = map[0].length;
+		*/
+	    var map = [ // 1  2  3  4  5  6  7  8  9
+	           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 0
+	           [1, 0, 0, 0, 1, 0, 0, 0, 0, 1,], // 1
+	           [1, 0, 0, 0, 1, 0, 0, 0, 0, 1,], // 2
+	           [1, 0, 0, 0, 1, 0, 0, 0, 0, 1,], // 3
+	           [1, 0, 0, 0, 1, 0, 0, 0, 0, 1,], // 4
+	           [1, 0, 0, 0, 1, 0, 0, 0, 0, 1,], // 5
+	           [1, 0, 0, 0, 1, 0, 0, 0, 0, 1,], // 6
+	           [1, 0, 0, 0, 1, 0, 0, 0, 0, 1,], // 7
+	           [1, 0, 0, 0, 0, 0, 0, 0, 0, 1,], // 8
+	           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 9
+	           ], mapW = map.length, mapH = map[0].length;       
 
            	this.map = map;
 

@@ -26,6 +26,7 @@ THREE.PointerLockControls = function ( camera, App ) {
 			x: 1,
 			y: 1,
 			z: 1,
+			j: 1
 		};
 
 		this.canMoveForward = true;	
@@ -48,7 +49,6 @@ THREE.PointerLockControls = function ( camera, App ) {
 
 	var onKeyDown = function ( event ) {
 
-		//console.log( 'keydown: ' + event.keyCode );
 
 		switch ( event.keyCode ) {
 
@@ -72,7 +72,9 @@ THREE.PointerLockControls = function ( camera, App ) {
 				break;
 
 			case 32: // space
-				if ( canJump === true ) velocity.y += 350;
+				if ( canJump === true ){ 
+					velocity.y += 500;
+				}
 				canJump = false;
 				break;
 
@@ -150,7 +152,9 @@ THREE.PointerLockControls = function ( camera, App ) {
 
 	this.update = function () {
 
-		if ( scope.enabled === false ) return;
+		if ( scope.enabled === false ){
+			return;	
+		} 
 
 		var time = performance.now(),
 			delta = ( time - prevTime ) / 1000;
@@ -179,9 +183,9 @@ THREE.PointerLockControls = function ( camera, App ) {
 			velocity.y = Math.max( 0, velocity.y );
 		}
 
-			yawObject.translateX( velocity.x * delta );
-			yawObject.translateY( velocity.y * delta ); 
-			yawObject.translateZ( velocity.z * delta );
+		yawObject.translateX( velocity.x * delta );
+		yawObject.translateY( velocity.y * delta ); 
+		yawObject.translateZ( velocity.z * delta );
 
 		if ( yawObject.position.y < 10 ) {
 			velocity.y = 0;
