@@ -17,8 +17,11 @@
 
 		this.cube = new THREE.BoxGeometry(this.unitSize, this.wallHeight, this.unitSize);
 
-		this.texture_1 = THREE.ImageUtils.loadTexture('/img/stone-0001.jpg');
+		this.texture_1 = THREE.ImageUtils.loadTexture('/img/doom2-plut/a-brick1.png');
 		this.texture_1.wrapS = THREE.RepeatWrapping;
+
+		this.texture_2 = THREE.ImageUtils.loadTexture('/img/doom2-plut/a-dbri1.png');
+		this.texture_2.wrapS = THREE.RepeatWrapping;
 
 		this.materials = [
 
@@ -26,9 +29,9 @@
 				map: this.texture_1,
 				side:  THREE.DoubleSide	
 			}),
-			new THREE.MeshBasicMaterial({
-				color:0xFF0000,
-				side:  THREE.DoubleSide
+			new THREE.MeshLambertMaterial({
+				map: this.texture_1,
+				side:  THREE.DoubleSide	
 			}),
          ];
 	};
