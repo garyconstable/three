@@ -9,10 +9,13 @@
 
 		this.startPosition = null,
 		this.units = 1,
-		this.width = 9,
-		this.depth = 9,
+		this.width = 1,
+		this.depth = 1,
 		this.wallHeight = 1200;
 		this.unitSize = 700;
+
+		this.cols = 0;
+		this.rows = 0;
 
 
 		this.cube = new THREE.BoxGeometry(this.unitSize, this.wallHeight, this.unitSize);
@@ -30,7 +33,7 @@
 				side:  THREE.DoubleSide	
 			}),
 			new THREE.MeshLambertMaterial({
-				map: this.texture_1,
+				map: this.texture_2,
 				side:  THREE.DoubleSide	
 			}),
          ];
@@ -156,16 +159,19 @@
 					if (0 == k%4){ 
 						
 						line[k]= '+';
+						this.cols += 0.5;
 
 					}else{
 
 						if (j>0 && m.verti[j/2-1][Math.floor(k/4)]){
 
 							line[k]= ' ';
+							//this.cols+=3;
 
 						}else{
 
 							line[k]= '-';
+							this.cols += 0.3333;
 						}
 					}
 				}
@@ -179,15 +185,18 @@
 						if (k>0 && m.horiz[(j-1)/2][k/4-1]){
 
 							line[k]= ' ';
+							//this.rows+=3;
 
 						}else{
 
 							line[k]= '|';
+							this.rows +=2;
 
 						}
 
 					}else{
 						line[k]= ' ';
+						//this.rows+=3;
 					}
 				}
 			}
@@ -198,6 +207,7 @@
 
 			if (m.x*2-1 == j){
 				line[4*m.y]= ' ';
+				//this.cols+=3;
 			}
 
 			rows.push(line);
@@ -221,12 +231,15 @@
 
 
 	app.prototype.setStartPosition = function( m, x, z ){		
-
+		/*
 		this.camera.position.set(
 			(0-(x - m.units/2) * m.unitSize),
 			m.wallHeight/2,
 			(z - m.units/2) * m.unitSize 
 		);
+		*/
+
+		this.camera.position.y = m.wallHeight/2;
 
 		var s = new THREE.Vector3( 
 			(0-(x - m.units/2) * m.unitSize),
@@ -264,10 +277,13 @@
 			this.maze = m;
 
 			this.mazeDimentions = {
-				width: 	( Map.unitSize * Map.width+1 ) * Map.units,
-				depth: ( Map.unitSize * Map.depth+1 ) * Map.units
+				width: 		Math.round( ( Map.unitSize * Map.cols ) * Map.units) ,
+				depth: 		Math.round( ( Map.unitSize * Map.rows ) * Map.units) + Map.unitSize ,
+				//width: 		2800,
+				unitSize:   ( Map.unitSize * 1 ) * Map.units, 
 			};
 
+		console.log(( Map.unitSize * 1 ) * Map.units );
 
 		var c = 0; 
 			
@@ -282,7 +298,7 @@
 					switch(current){
 
 		 				case '+':
-		 					this.addCube( Map, x, y, 0);
+		 					this.addCube( Map, x, y, 1);
 		 					break;
 
 						case ' ':
@@ -293,11 +309,11 @@
 		 					break;
 
 		 				case '-':
-							this.addCube( Map, x, y, 1);
+							this.addCube( Map, x, y, 0);
 		 					break;	
 
 						case '|':
-							this.addCube( Map, x, y, 1);
+							this.addCube( Map, x, y, 0);
 		 					break;
 					}
 				}

@@ -175,7 +175,7 @@
 	 	app.prototype.addFloor = function(){
 	 		
 			var segments = 1,
-				repeat = 20;
+				repeat = 200;
 
 			var texture = THREE.ImageUtils.loadTexture('/img/floor_tile_001.png');
 				texture.wrapS = THREE.RepeatWrapping;
@@ -183,7 +183,7 @@
 				texture.repeat.set( repeat, repeat );
 
 	  		var geometry = new THREE.PlaneGeometry(
-	  			this.mazeDimentions.width, 
+	  			this.mazeDimentions.width - this.mazeDimentions.unitSize,
 	  			this.mazeDimentions.depth, 
 	  			segments, 
 	  			segments
@@ -198,17 +198,16 @@
 
 			var floorObj = new THREE.Mesh(geometry, material);
 
-				/*
-	 			floorObj.position.set( 
-	 				0 - (this.mazeDimentions.width / 2),  
-	 				0,
-	 				(this.mazeDimentions.depth / 2)
-				);
-				*/
-	 			
+				
 
 	 			floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 				floorObj.receiveShadow = true;
+
+				floorObj.position.set( 
+	 				(this.mazeDimentions.unitSize / 2),  
+	 				0,
+	 				(this.mazeDimentions.depth / 2 )-this.mazeDimentions.unitSize 
+				);
 
 	  			this.scene.add( floorObj );
 	 	}
