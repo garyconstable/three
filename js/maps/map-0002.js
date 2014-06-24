@@ -147,7 +147,7 @@
 		var line;
 
 		var rows = [];
-		
+
 		for (var j= 0; j<m.x*2+1; j++) {
 			
 			var line= [];
@@ -159,19 +159,17 @@
 					if (0 == k%4){ 
 						
 						line[k]= '+';
-						this.cols += 0.5;
 
 					}else{
 
 						if (j>0 && m.verti[j/2-1][Math.floor(k/4)]){
 
 							line[k]= ' ';
-							//this.cols+=3;
 
 						}else{
 
 							line[k]= '-';
-							this.cols += 0.3333;
+						
 						}
 					}
 				}
@@ -185,18 +183,15 @@
 						if (k>0 && m.horiz[(j-1)/2][k/4-1]){
 
 							line[k]= ' ';
-							//this.rows+=3;
 
 						}else{
 
 							line[k]= '|';
-							this.rows +=2;
 
 						}
 
 					}else{
 						line[k]= ' ';
-						//this.rows+=3;
 					}
 				}
 			}
@@ -207,7 +202,6 @@
 
 			if (m.x*2-1 == j){
 				line[4*m.y]= ' ';
-				//this.cols+=3;
 			}
 
 			rows.push(line);
@@ -230,36 +224,31 @@
 	}
 
 
+	app.prototype.radians = function(degrees) {
+  		return degrees * Math.PI / 180;
+	};
+
+
 	app.prototype.setStartPosition = function( m, x, z ){		
+		
 		/*
-		this.camera.position.set(
-			(0-(x - m.units/2) * m.unitSize),
-			m.wallHeight/2,
-			(z - m.units/2) * m.unitSize 
-		);
+		var s = new THREE.Vector3( 1, 1, 1 );
+		this.camera.position.set( s );
+		this.startPosition = s;
 		*/
 
 		this.camera.position.y = m.wallHeight/2;
-
-		var s = new THREE.Vector3( 
-			(0-(x - m.units/2) * m.unitSize),
-			m.wallHeight/2, 
-			(z - m.units/2) * m.unitSize 
-		);
-
-		//this.camera.position.set( s );
-
-		this.startPosition = s;
+		this.camera.position.z = m.unitSize;
 	} 
 
 
-	app.prototype.addCube = function( m, x, y, mat ){
+	app.prototype.addCube = function( m, x, z, mat ){
 
 		var box = new THREE.Mesh( m.cube, m.materials[mat] );
 
-			box.position.x = (x - m.units/2) * m.unitSize;
+			box.position.x = x * m.unitSize;
 			box.position.y = m.wallHeight/2;
-			box.position.z = (y - m.units/2) * m.unitSize;
+			box.position.z = z * m.unitSize;
 
 		this.scene.add(box);
 
@@ -277,15 +266,12 @@
 			this.maze = m;
 
 			this.mazeDimentions = {
-				width: 		Math.round( ( Map.unitSize * Map.cols ) * Map.units) ,
-				depth: 		Math.round( ( Map.unitSize * Map.rows ) * Map.units) + Map.unitSize ,
-				//width: 		2800,
-				unitSize:   ( Map.unitSize * 1 ) * Map.units, 
+				width: 		Map.unitSize*(m.length+1),
+				depth: 		Map.unitSize*(m[0].length+0),
+				unitSize:   Map.unitSize * Map.units, 
 			};
 
-		console.log(( Map.unitSize * 1 ) * Map.units );
-
-		var c = 0; 
+		var c = 0;
 			
 		for( var x=0; x<m.length; x++){
 
@@ -298,7 +284,7 @@
 					switch(current){
 
 		 				case '+':
-		 					this.addCube( Map, x, y, 1);
+		 					this.addCube( Map, x, y, 0);
 		 					break;
 
 						case ' ':

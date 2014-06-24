@@ -213,13 +213,26 @@
 
 	 			floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 				floorObj.receiveShadow = true;
-
+				/*
 				floorObj.position.set( 
 	 				(this.mazeDimentions.unitSize / 2),  
 	 				0,
 	 				(this.mazeDimentions.depth / 2 )-this.mazeDimentions.unitSize 
 				);
+				*/
 
+				console.log( 0-(this.mazeDimentions.width / 2) )
+
+				console.log(this.mazeDimentions.width );
+				
+				floorObj.position.set( 
+					(this.mazeDimentions.width / 2 )-this.mazeDimentions.unitSize,
+					0,
+					(this.mazeDimentions.depth / 2 )-(this.mazeDimentions.unitSize/2)
+				);
+				
+
+		
 	  			this.scene.add( floorObj );
 	 	}
 
