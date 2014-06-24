@@ -9,8 +9,8 @@
 
 		this.startPosition = null,
 		this.units = 1,
-		this.width = 1,
-		this.depth = 1,
+		this.width = 10,
+		this.depth = 10,
 		this.wallHeight = 1200;
 		this.unitSize = 700;
 
