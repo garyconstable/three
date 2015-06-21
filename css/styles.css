@@ -1,0 +1,57 @@
+
+body{
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+    margin: 0px;
+    overflow: hidden;
+    position: fixed;
+}
+
+#sidebar{
+    z-index: 1000;
+    position: fixed;
+    top:0;
+    left:0;
+    width:250px;
+    height: 100%;
+
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    -o-transition: all .5s ease;
+    transition: all .5s ease;
+    padding:15px;
+    background: rgba(68, 68, 68, 0.8);
+}
+
+#instructions{
+    background: rgba(255,255,255, 0.7);
+    border: solid 3px #000;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px 0 0 0;
+    width:100%;
+}
+
+#instructions span{
+    font-size: 25px !important;
+    margin-bottom: 3px;
+    display: block;
+}
+
+#sidebar-toggle{
+    -ms-transform: rotate(20deg);
+    -webkit-transform: rotate(20deg);
+    transform: rotate(-90deg);
+    position: absolute;
+    left: 239px;
+    padding: 10px 20px 17px 20px;
+    top: 38px;
+    background: rgba(68, 68, 68, 0.8);
+    color: white;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+#sidebar h4{
+    color:white;
+}

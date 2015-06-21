@@ -30,16 +30,19 @@
 
 			new THREE.MeshLambertMaterial({
 				map: this.texture_1,
-				side:  THREE.DoubleSide	
+				//side:  THREE.DoubleSide	
 			}),
 			new THREE.MeshLambertMaterial({
 				map: this.texture_2,
-				side:  THREE.DoubleSide	
+				//side:  THREE.DoubleSide	
 			}),
          ];
 	};
 
-
+    /**
+     * 
+     * @returns {undefined|map.prototype.createMaze.map-0002Anonym$9}
+     */
 	map.prototype.createMaze = function() {
 
 		var x = this.width;
@@ -129,9 +132,13 @@
 
 		return {x: x, y: y, horiz: horiz, verti: verti};
 
-	}
+	};
 
-
+    /**
+     * 
+     * @param {type} m
+     * @returns {map.prototype.drawMap.rows|Array}
+     */
 	map.prototype.drawMap = function( m ){
 		
 		var width = this.width;
@@ -212,23 +219,42 @@
 		console.log(text.join(''))
 
 		return rows;
-	}
+	};
 
-
+    /**
+     * 
+     * @returns {map.prototype.drawMap.rows|Array|map.prototype.createMaze.map-0002Anonym$9}
+     */
 	map.prototype.init = function(){
 
 		var m = this.createMaze(),
 			m = this.drawMap( m );
 
 			return m;			
-	}
+	};
 
-
+    
+    
+    
+    
+    
+    
+    /**
+     * 
+     * @param {type} degrees
+     * @returns {Number}
+     */
 	app.prototype.radians = function(degrees) {
   		return degrees * Math.PI / 180;
 	};
-
-
+    
+    /**
+     * 
+     * @param {type} m
+     * @param {type} x
+     * @param {type} z
+     * @returns {undefined}
+     */
 	app.prototype.setStartPosition = function( m, x, z ){		
 		
 		/*
@@ -239,9 +265,16 @@
 
 		this.camera.position.y = m.wallHeight/2;
 		this.camera.position.z = m.unitSize;
-	} 
+	};
 
-
+    /**
+     * 
+     * @param {type} m
+     * @param {type} x
+     * @param {type} z
+     * @param {type} mat
+     * @returns {undefined}
+     */
 	app.prototype.addCube = function( m, x, z, mat ){
 
 		var box = new THREE.Mesh( m.cube, m.materials[mat] );
@@ -251,16 +284,18 @@
 			box.position.z = z * m.unitSize;
 
 		this.scene.add(box);
-
-	}
-
-
-
+        this.sceneObjContainer.push( box );
+	};
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
 	app.prototype.loadMap = function() {
 		
 
 		var Map = new map(this);
-
+        
 		var m = Map.init();
 
 			this.maze = m;
@@ -288,7 +323,7 @@
 		 					break;
 
 						case ' ':
-							if(c==0){
+							if(c===0){
 								this.setStartPosition( Map, x, y );
 								c++;
 							}	

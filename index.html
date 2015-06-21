@@ -1,352 +1,58 @@
 <!doctype html>
 <html lang="en">
 <head>
- 	<title>Three.js 0002 - Simple room</title>
-  	<meta charset="utf-8">
-  	<style>
-		body{
-			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-			font-weight: 300;
-			margin: 0px;
-			overflow: hidden;
-			position: fixed;
-		}
-		#instructions{
-			position: fixed;
-			top: 24px;
-			z-index: 1;
-			background: rgba(255,255,255, 0.7);
-			border: solid 3px #000;
-			border-radius: 10px;
-			left: 30px;
-			padding: 10px;
-		}
-  	</style>
-
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		ga('create', 'UA-48117621-1', 'garyconstable.co.uk');
-		ga('send', 'pageview');
-	</script>
-
+  <title>Three.js Playground | Gary Constable | Web Developer, Exeter, Devon</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+  <script src="/bower_components/three.js/three.min.js"></script>
+  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-48117621-1', 'garyconstable.co.uk');
+    ga('send', 'pageview');
+  </script>
 </head>
-<body style="margin: 0;">
- 
-	<div id="blocker">
-
-		<div id="instructions">
-			<span style="font-size:40px">Click to move</span>
-			<br />
-			(W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
-		</div>
-
-	</div>
-
-	<script src="/js/lib/three.js"></script>
-
-	<script src="/js/lib/app-base.js"></script>
-
-	<script src="/js/controls/pointerlock-controls.js"></script>
-
-	<script src="/js/helpers/pointer-lock-init.js"></script>
-
-	<script src="/js/maps/map-0002.js"></script>
-	
-  	<script>
- 		
- 		'use strict';
-
-	 	//init / setup
-		app.prototype.init = function() {
-
-    		//scene must haves 
-			this.width = window.innerWidth;
-    		this.height = window.innerHeight;
-
-			this.camera = null;
-			this.renderer = null;
-			this.controls = null;
-			
-			//containers
-			this.sceneObjContainer = [];
-    	};
-
-
-    	//create renderer
-    	app.prototype.createRenderer = function(){
-
-			this.renderer = new THREE.WebGLRenderer({antialias:true});
-			this.renderer.setSize(this.width, this.height);
-			
-			this.renderer.shadowMapEnabled = true;
-			this.renderer.shadowMapSoft = true;
-			/*
-			this.renderer.shadowCameraNear = 3;
-			this.renderer.shadowCameraFar = 1000000;
-			this.renderer.shadowCameraFov = 50;
-
-			this.renderer.shadowMapBias = 0.0039;
-			this.renderer.shadowMapDarkness = 0.5;
-			this.renderer.shadowMapWidth = 1024;
-			this.renderer.shadowMapHeight = 1024;
-			*/
-			document.body.appendChild(this.renderer.domElement);
-
-    	};
-
-    	//create the scene
-		app.prototype.createScene = function(){
-			this.scene = new THREE.Scene();
-			this.scene.fog = new THREE.Fog( 0x000000, 1500, 4000 );
-		}
-
-    	//add camera
-    	app.prototype.addCamera = function(){
-			this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000000);
-    	};
-
-    	//dircetional light
-    	app.prototype.addDirectionalLight = function(){
-
-
-			var light = new THREE.DirectionalLight(0xdfebff, 1);
-				light.position.set(1000, 800, 700);
-
-				light.position.multiplyScalar(1);
-
-				light.castShadow = true;
-				light.shadowCameraVisible = true;
-
-				light.shadowMapWidth = 512;
-				light.shadowMapHeight = 512;
-
-				/*	
-				var d = 150;
-
-				light.shadowCameraLeft = -d;
-				light.shadowCameraRight = d;
-				light.shadowCameraTop = d;
-				light.shadowCameraBottom = -d;
-				*/
-
-			light.shadowCameraFar = 2000;
-			light.shadowCameraFov = 50;
-			light.shadowDarkness = 0.8;
-			this.scene.add(light);
-    	};
-
-    	//ambient light
-    	app.prototype.addAmbientLight = function(){
-			var ambientLight = new THREE.AmbientLight();
-			this.scene.add(ambientLight);
-    	}
-
-	 	//dom events
-		app.prototype.events = function(){
-			window.onresize = function(event) {
-				App.width = window.innerWidth;	
-				App.height = window.innerHeight;
-				App.renderer.setSize(App.width, App.height);
-				App.camera.aspect = App.width / App.height;
-				App.camera.updateProjectionMatrix();
-			};
-		};
-
-	 	//annim loop
-		app.prototype.animate = function(){
-
-			App.scene.updateMatrixWorld();
-			App.canMoveForward();
-			App.controls.update();
-			App.renderer.render( App.scene, App.camera );
-			requestAnimationFrame( App.animate );
-		};
-
-	 	//add controls
-	 	app.prototype.addControls = function(){
-
-			this.controls = new THREE.PointerLockControls(this.camera, this);
-			this.controls.speedMod = {
-				x: 8,
-				y: 1,
-				z: 35,
-				j: 10
-			};
-			this.pointerlockInit();
-			this.scene.add( this.controls.getObject() );
-			this.ray = new THREE.Raycaster();
-			this.ray.ray.direction.set( 0, -1, 0 );
-	 	}
-
-	 	//add a floor
-	 	app.prototype.addFloor = function(){
-	 		
-			var segments = 1,
-				repeat = 200;
-
-			var texture = THREE.ImageUtils.loadTexture('/img/floor_tile_001.png');
-				texture.wrapS = THREE.RepeatWrapping;
-				texture.wrapT = THREE.RepeatWrapping;
-				texture.repeat.set( repeat, repeat );
-
-	  		var geometry = new THREE.PlaneGeometry(
-	  			this.mazeDimentions.width - this.mazeDimentions.unitSize,
-	  			this.mazeDimentions.depth, 
-	  			segments, 
-	  			segments
-			);
-
-	      	var material = new THREE.MeshLambertMaterial({ 
-		      		map: texture, 
-		      		//color: 0xdfebff
-		      		//ambient: 0xffffff,
-		      		//emissive: 0xffffff,
-		      	});
-
-			var floorObj = new THREE.Mesh(geometry, material);
-
-				
-
-	 			floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-				floorObj.receiveShadow = true;
-				/*
-				floorObj.position.set( 
-	 				(this.mazeDimentions.unitSize / 2),  
-	 				0,
-	 				(this.mazeDimentions.depth / 2 )-this.mazeDimentions.unitSize 
-				);
-				*/
-
-				console.log( 0-(this.mazeDimentions.width / 2) )
-
-				console.log(this.mazeDimentions.width );
-				
-				floorObj.position.set( 
-					(this.mazeDimentions.width / 2 )-this.mazeDimentions.unitSize,
-					0,
-					(this.mazeDimentions.depth / 2 )-(this.mazeDimentions.unitSize/2)
-				);
-				
-
-		
-	  			this.scene.add( floorObj );
-	 	}
-
-	 	//sky box
-	 	app.prototype.addSkybox = function(){
-
-	 		// create the geometry sphere
-			var geometry  = new THREE.SphereGeometry( (500*10), 100, 100)
-			
-			var texture = THREE.ImageUtils.loadTexture('/img/starfield.jpg');
-				texture.wrapS = THREE.RepeatWrapping;
-
-			var material  = new THREE.MeshLambertMaterial({
-					map: texture,
-					side: THREE.BackSide,
-					//color: 0x000000
-		      		//ambient: 0xffffff,
-		      		//emissive: 0xffffff,
-		      	})
-
-			var skybox = new THREE.Mesh(geometry, material);
-				this.scene.add( skybox );
-				this.sceneObjContainer.push( skybox );
-	 	}
-
-
-	 	app.prototype.addTestBox = function(){
-
-
-			var texture = THREE.ImageUtils.loadTexture('/img/crate.jpg');
-				texture.wrapS = THREE.RepeatWrapping;
-
-	 		var geometry  = new THREE.BoxGeometry( 200, 200, 200)
-
-	 		var material = new THREE.MeshBasicMaterial({
-				map: texture,
-				side:  THREE.DoubleSide,
-				color: 0x666666
-	 		});
-
- 			var cube = new THREE.Mesh( geometry, material  );
-				cube.position.y = 100;
-				cube.castShadow = true;
-
-
-				this.scene.add( cube );
-				this.sceneObjContainer.push( cube );
- 		}
-
-	 	//touching the skybox?
-		app.prototype.canMoveForward = function(){				
-			
-			this.controls.canMoveForward = true;
-
-			this.ray.ray.origin.copy( this.controls.getObject().position );
-
-			var intersections = this.ray.intersectObjects( this.sceneObjContainer );
-
-
-			if ( intersections.length > 0 ) {
-
-				var distance = intersections[ 0 ].distance;
-
-				//console.log( distance );
-
-				//if ( distance > -150 && distance < 150 ) {
-				//	App.controls.canMoveForward = false;
-				//}
-				//App.controls.canMoveForward = false;
-			}
-		}
-
-		app.prototype.loadWorld = function(){
-
-			//must haves
-			this.events();
-			this.init();
-			this.createRenderer();
-			this.createScene();
-			this.addCamera();
-
-			//load the world map
-			this.loadMap();
-
-
-			//scene objects
-			this.addAmbientLight();
-			this.addDirectionalLight();
-			this.addControls();
-			//this.addSkybox();
-			
-			this.addFloor();
-			
-
-			//test box
-			this.addTestBox();
-
-
-			return this;
-		}
-
-
-
-	 	//create object and run
-	 	App = new app().loadWorld();
-
-	 	//A info - world / app obj
-	 	console.log(App);
-
-	 	//render loop
-		App.animate();
-
- 
-  	</script>
- 
+<body>
+  <div id="sidebar">
+    <div id="sidebar-toggle">HUD</div>
+    <div id="blocker">
+      <div id="instructions">
+        <span style="font-size:40px">Three.js Playground</span>
+        Click to activate First Person View
+      </div>
+    </div>
+    
+    <hr>
+    
+    <h4>Projects</h4>
+    <select id="projectSelect" class="form-control">
+      <option value="0">Please select...</option>
+      <option value="grid">Grid</option>
+      <option value="maze">Maze</option>
+    </select>
+    
+  </div>
+  <div id="pageLoad"></div>
+  <script src="/js/lib/app-base.js"></script>
+  <script>
+    $(function(){
+      $("#pageLoad").load("/projects/grid/grid.html");
+      $('#projectSelect').change(function(e){
+        if( $(this).val() !== 0  && $(this).val() !== '0'){
+          var _this = $(this);
+          $("#pageLoad").html();
+          $('canvas').remove();
+          var x = setTimeout(function(){
+            console.log('load',  _this.val() )
+            $("#pageLoad").load("/projects/" + _this.val() + "/" + _this.val() + ".html" );
+          },500);
+        }
+      });  
+    });
+  </script>
 </body>
 </html>
