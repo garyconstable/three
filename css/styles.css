@@ -52,6 +52,15 @@ body{
     border-bottom-right-radius: 6px;
 }
 
-#sidebar h4{
+#sidebar h4, #sidebar h5{
     color:white;
+}
+
+#sidebar h5{
+    margin-top:30px;
+}
+
+#sidebar label{
+    color:white;
+    width:100%;
 }

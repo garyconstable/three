@@ -27,6 +27,9 @@
         this.camera = null;
         this.renderer = null;
         this.controls = null;
+        
+        this.sceneObjects = {};
+        
     };
 
     //create renderer
@@ -83,6 +86,18 @@
         var line = new THREE.Line( geometry, line_material, THREE.LinePieces );
         this.scene.add( line );
     };
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    app.prototype.addSpotCylinder = function(){
+        // API: THREE.CylinderGeometry(bottomRadius, topRadius, height, segmentsRadius, segmentsHeight)
+        var cylinder = new THREE.Mesh(new THREE.CylinderGeometry(0, 25, 100, 50, 50, false), new THREE.MeshNormalMaterial() );
+        cylinder.overdraw = true;
+        this.sceneObjects['cylinder'] = cylinder;
+        this.scene.add(cylinder);
+    };
 
     /**
      * load the world ...
@@ -100,6 +115,7 @@
         
         //app specific
         this.loadGrid();
+        this.addSpotCylinder();
         
         //return
         return this;
