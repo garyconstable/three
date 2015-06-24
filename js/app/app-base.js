@@ -10,10 +10,20 @@ _ .-') _            (`\ .-') /`            _  .-')            _ .-') _    .-')
  `----'' `-------'         '--'   '--'      `-----' `--' '--' `------' `-------'  `-----'  
 */
 
-	'use strict';
+    'use strict';
 
 	var app = function(){
-		this.version = 1;  
+		
+        try {
+            this.bindings();
+            this.cleanup();
+        }
+        catch(err) {
+            //console.log(err)
+        }
+        
+        this.version = 1;  
+        
 		return this;
 	};
 

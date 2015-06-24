@@ -21,57 +21,59 @@
     <div id="sidebar-toggle">HUD</div>
     <div id="blocker">
       <div id="instructions">
-        <span style="font-size:40px">Three.js Playground</span>
-        Click to activate First Person View
+        <span>Enable First Person View</span>
       </div>
     </div>
     
     <hr>
     
-    <h4>Projects</h4>
     <select id="projectSelect" class="form-control">
-      <option value="0">Please select...</option>
+      <!-- <option value="0">Scene select...</option> -->
       <option value="grid">Grid</option>
       <option value="maze">Maze</option>
     </select>
+
+    <hr>
+    
+    <select id="objectSelect" class="form-control">
+    </select>
+
+    <hr>
+    
+    <label>X Pos: <input class="slider" data-type='position' data-value="x" type="range" min="-500" max="500" value="0" step="1" id="posX" oninput="App.sliderUpdate(this, value);" ></label>
+    <label>Y Pos: <input class="slider" data-type='position' data-value="y" type="range" min="-500" max="500" value="0" step="1" id="posY" oninput="App.sliderUpdate(this, value);" ></label>
+    <label>Z Pos: <input class="slider" data-type='position' data-value="z" type="range" min="-500" max="500" value="0" step="1" id="posZ" oninput="App.sliderUpdate(this, value);" ></label>
+    
+    <hr>
+    <label>X Rot: <input class="slider" data-type='rotation' data-value="x" type="range" min="0" max="360" value="180" step="1" id="rotX" oninput="App.sliderUpdate(this, value);" ></label>
+    <label>Y Rot: <input class="slider" data-type='rotation' data-value="y" type="range" min="0" max="360" value="180" step="1" id="rotY" oninput="App.sliderUpdate(this, value);" ></label>
+    <label>Z Rot: <input class="slider" data-type='rotation' data-value="z" type="range" min="0" max="360" value="180" step="1" id="rotZ" oninput="App.sliderUpdate(this, value);" ></label>
+    
+    <hr>
+    <label>X &nbsp;&nbsp;%: <input class="slider" data-type='scale' data-value="x" type="range" min="-100" max="100" value="1" step="1" id="scaX" oninput="App.sliderUpdate(this, value);" ></label>
+    <label>Y &nbsp;&nbsp;%: <input class="slider" data-type='scale' data-value="y" type="range" min="-100" max="100" value="1" step="1" id="scaY" oninput="App.sliderUpdate(this, value);" ></label>
+    <label>Z &nbsp;&nbsp;%: <input class="slider" data-type='scale' data-value="z" type="range" min="-100" max="100" value="1" step="1" id="scaZ" oninput="App.sliderUpdate(this, value);" ></label>
     
     
     <hr>
-    
-    <h4>Controls</h4>
-    
-    <h5>Position</h5>
-    <label>X Pos: <input class="slider" data-type='position' data-value="x" type="range" min="-500" max="500" value="0" id="posX" ></label>
-    <label>Y Pos: <input class="slider" data-type='position' data-value="y" type="range" min="-500" max="500" value="0" id="posY" ></label>
-    <label>Z Pos: <input class="slider" data-type='position' data-value="z" type="range" min="-500" max="500" value="0" id="posZ" ></label>
-    
-    <h5>Rotation</h5>
-    <label>X Rot: <input class="slider" data-type='rotation' data-value="z" type="range" min="0" max="360" value="180" id="rotX" ></label>
-    <label>Y Rot: <input class="slider" data-type='rotation' data-value="y" type="range" min="0" max="360" value="180" id="rotY" ></label>
-    <label>Z Rot: <input class="slider" data-type='rotation' data-value="z" type="range" min="0" max="360" value="180" id="rotZ" ></label>
-  
+    <a href="#" class="resetScene" style="cursor:pointer">Reset Scene</a>
     
   </div>
+  
   <div id="pageLoad"></div>
   
-  <script src="/js/lib/gui-controls.js"></script>
-  
-  <script src="/js/lib/app-base.js"></script>
+
+  <script src="/js/app/app-base.js"></script>
+  <script src="/js/app/app-gui.js"></script>
+  <script src="/js/app/app-sceneloader.js"></script> 
+  <script src="/js/app/app-storage.js"></script> 
+  <script src="/js/app/app-functions.js"></script> 
+
   <script>
-    $(function(){
-      $("#pageLoad").load("/projects/grid/grid.html");
-      $('#projectSelect').change(function(e){
-        if( $(this).val() !== 0  && $(this).val() !== '0'){
-          var _this = $(this);
-          $("#pageLoad").html();
-          $('canvas').remove();
-          var x = setTimeout(function(){
-            console.log('load',  _this.val() )
-            $("#pageLoad").load("/projects/" + _this.val() + "/" + _this.val() + ".html" );
-          },500);
-        }
-      });  
-    });
+    'use strict';
+    var Loader = new app();
+    Loader.loadDefaultScene();
   </script>
+  
 </body>
 </html>

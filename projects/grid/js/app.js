@@ -2,34 +2,31 @@
  	
     'use strict';
     
-    var app = function(){
-        this.app_name = "Grid";  
-		this.version = 1;  
-		return this;
-	};
-
+    var app = app || {};
+    
 	var App = App || {};
+    
+    
+    //init / setup
+    app.prototype.init = function() {
+        
+        
+         
+        this.app_name = "Grid";  
+        this.config_file = "/projects/grid/json/config.json";  
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.camera = null;
+        this.renderer = null;
+        this.controls = null;
+        this.sceneObjects = {};
+    };
     
     app.prototype.cleanup = function(){
         delete this.camera;
         delete this.renderer;
         delete this.controls;
         delete this.scene;
-    };
-    
-    //init / setup
-    app.prototype.init = function() {
-        
-        this.cleanup();
-        
-        this.width = window.innerWidth;
-        this.height = window.innerHeight;
-        this.camera = null;
-        this.renderer = null;
-        this.controls = null;
-        
-        this.sceneObjects = {};
-        
     };
 
     //create renderer
@@ -93,10 +90,12 @@
      */
     app.prototype.addSpotCylinder = function(){
         // API: THREE.CylinderGeometry(bottomRadius, topRadius, height, segmentsRadius, segmentsHeight)
+        /*
         var cylinder = new THREE.Mesh(new THREE.CylinderGeometry(0, 25, 100, 50, 50, false), new THREE.MeshNormalMaterial() );
         cylinder.overdraw = true;
         this.sceneObjects['cylinder'] = cylinder;
         this.scene.add(cylinder);
+        */
     };
 
     /**
@@ -115,7 +114,13 @@
         
         //app specific
         this.loadGrid();
-        this.addSpotCylinder();
+        //this.addSpotCylinder();
+        
+        //load scene objects from storage
+        this.loadSceneObjectsFromStorage();
+        
+        
+        
         
         //return
         return this;
@@ -127,6 +132,11 @@
         this.camera.position.z = Math.sin( timer ) * 1000;
         this.camera.lookAt( this.scene.position );
     };
+   
+   
+   
+   
+   
    
    
    

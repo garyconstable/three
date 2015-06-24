@@ -1,10 +1,11 @@
 
+
 body{
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
     font-weight: 300;
     margin: 0px;
     overflow: hidden;
-    position: fixed;
+    position: fixed;    
 }
 
 #sidebar{
@@ -33,9 +34,10 @@ body{
 }
 
 #instructions span{
-    font-size: 25px !important;
-    margin-bottom: 3px;
+   
     display: block;
+    width:100%;
+    text-align:center;
 }
 
 #sidebar-toggle{
@@ -54,13 +56,25 @@ body{
 
 #sidebar h4, #sidebar h5{
     color:white;
+    font-weight:normal;
+    font-size: 16px;
 }
 
 #sidebar h5{
-    margin-top:30px;
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 300;
 }
 
 #sidebar label{
     color:white;
     width:100%;
+    font-weight: 300;
+    font-size:12px;
+}
+
+input[type=range].slider{
+    float: right;
+    width: 160px;
+    margin-right: 5px;
 }

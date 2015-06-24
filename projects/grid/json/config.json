@@ -1,0 +1,95 @@
+{
+    "cylinder": {
+       
+        "type"              : "cylinder",
+        "radiusTop"         : 0,
+        "radiusBottom"      : 25,
+        "height"            : 100,
+        "radiusSegments"    : 50, 
+        "heightSegments"    : 50,
+        "openEnded"         : false,
+        "thetaStart"        : null,
+        "thetaLength"       : null,
+        "overdraw"          : true,
+        
+        "position"          : {
+            "x" : -500,
+            "y" : 0,
+            "z" : 0
+        },
+        "rotation"          : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+        },
+        "scale"             : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+        }
+            
+    },
+    
+    "cylinder1": {
+       
+        "type"              : "cylinder",
+        "radiusTop"         : 0,
+        "radiusBottom"      : 25,
+        "height"            : 100,
+        "radiusSegments"    : 50, 
+        "heightSegments"    : 50,
+        "openEnded"         : false,
+        "thetaStart"        : null,
+        "thetaLength"       : null,
+        "overdraw"          : true,
+        
+        "position"          : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+        },
+        "rotation"          : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+        },
+        "scale"             : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+        }
+            
+    },
+    
+    "cylinder2": {
+       
+        "type"              : "cylinder",
+        "radiusTop"         : 0,
+        "radiusBottom"      : 25,
+        "height"            : 100,
+        "radiusSegments"    : 50, 
+        "heightSegments"    : 50,
+        "openEnded"         : false,
+        "thetaStart"        : null,
+        "thetaLength"       : null,
+        "overdraw"          : true,
+        
+        "position"          : {
+            "x" : 500,
+            "y" : 0,
+            "z" : 0
+        },
+        "rotation"          : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+        },
+        "scale"             : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+        }
+            
+    }
+    
+}
