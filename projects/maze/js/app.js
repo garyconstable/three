@@ -2,6 +2,18 @@
  		
     'use strict';
     
+    var app = app || {};
+    
+	var App = App || {};
+    
+    
+    app.prototype.cleanup = function(){
+        delete this.camera;
+        delete this.renderer;
+        delete this.controls;
+        delete this.scene;
+    };
+    
     
     //init / setup
     app.prototype.init = function() {
@@ -62,7 +74,7 @@
         var _this = this;
         
         _this.controls = new THREE.PointerLockControls(this.camera, _this);       
-        _this.player = new player(this);   
+        //_this.player = new player(this);   
         _this.controls.speedMod = {
             x: 8,
             y: 1,
@@ -132,20 +144,24 @@
     //touching the scene objects
     app.prototype.canMoveForward = function(){				
 		
-        var _this = this,
-            _playerWidth = 300;
+        if ( this.controls ){
+            
+            var _this = this,
+                _playerWidth = 300;
         
-        this.controls.canMoveForward = true;
-        this.ray.ray.origin.copy( this.controls.getObject().position );
-       
-        var intersections = this.ray.intersectObjects( this.sceneObjContainer, true );
+            this.controls.canMoveForward = true;
         
-        if ( intersections.length > 0 ) {
+            this.ray.ray.origin.copy( this.controls.getObject().position );
 
-            var distance = intersections[ 0 ].distance;
+            var intersections = this.ray.intersectObjects( this.sceneObjContainer, true );
 
-            if ( distance > - _playerWidth && distance < _playerWidth ) {                
-            	_this.controls.canMoveForward = false;
+            if ( intersections.length > 0 ) {
+
+                var distance = intersections[ 0 ].distance;
+
+                if ( distance > - _playerWidth && distance < _playerWidth ) {                
+                    _this.controls.canMoveForward = false;
+                }
             }
         }
     };
@@ -176,23 +192,23 @@
         return this;
     };
    
-   
-   
-    
-    //annim loop
-    var animate = function(){
-        App.scene.updateMatrixWorld();
-        App.canMoveForward();
-        App.controls.update();
-        App.renderer.render( App.scene, App.camera );
-        requestAnimationFrame( animate );
+    app.prototype.animate = function(){
+        
+        if (typeof App.canMoveForward === 'function') { 
+            App.scene.updateMatrixWorld();
+            App.canMoveForward();
+            App.controls.update();
+            App.renderer.render( App.scene, App.camera );
+            requestAnimationFrame( App.animate );
+        }
     };
 
     //create object and run
     App = new app().loadWorld();
+    App.animate();
+
 
     //A info - world / app obj
     console.log(App);
 
-    //render loop
-    animate();
+  

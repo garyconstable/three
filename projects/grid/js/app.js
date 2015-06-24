@@ -9,9 +9,6 @@
     
     //init / setup
     app.prototype.init = function() {
-        
-        
-         
         this.app_name = "Grid";  
         this.config_file = "/projects/grid/json/config.json";  
         this.width = window.innerWidth;
@@ -83,20 +80,6 @@
         var line = new THREE.Line( geometry, line_material, THREE.LinePieces );
         this.scene.add( line );
     };
-    
-    /**
-     * 
-     * @returns {undefined}
-     */
-    app.prototype.addSpotCylinder = function(){
-        // API: THREE.CylinderGeometry(bottomRadius, topRadius, height, segmentsRadius, segmentsHeight)
-        /*
-        var cylinder = new THREE.Mesh(new THREE.CylinderGeometry(0, 25, 100, 50, 50, false), new THREE.MeshNormalMaterial() );
-        cylinder.overdraw = true;
-        this.sceneObjects['cylinder'] = cylinder;
-        this.scene.add(cylinder);
-        */
-    };
 
     /**
      * load the world ...
@@ -114,14 +97,10 @@
         
         //app specific
         this.loadGrid();
-        //this.addSpotCylinder();
         
         //load scene objects from storage
         this.loadSceneObjectsFromStorage();
-        
-        
-        
-        
+
         //return
         return this;
     };
@@ -133,30 +112,28 @@
         this.camera.lookAt( this.scene.position );
     };
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-    
-    //annim loop
-    var animate = function(){
-        App.render();
-        App.renderer.render( App.scene, App.camera );
-        requestAnimationFrame( animate );
+    app.prototype.animate = function(){
+        
+        var _this = this;
+        
+        if (typeof App.render == 'function') { 
+            App.render();
+            App.renderer.render( App.scene, App.camera );
+            requestAnimationFrame( App.animate );
+        }
     };
+
+
+
+
 
 
     //create object and run
     App = new app().loadWorld();
+    App.animate();
+
+
+
 
     //A info - world / app obj
     console.log(App);
-
-    //render loop
-    animate();

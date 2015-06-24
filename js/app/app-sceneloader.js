@@ -1,10 +1,18 @@
 
 
 'use strict';
-
+    
 var app = app || {};
 
+var App = App || {};
 
+/**
+ * 
+ * @param {type} obj
+ * @param {type} name
+ * @param {type} saveData
+ * @returns {undefined}
+ */
 app.prototype.loadGeometry = function( obj, name, saveData ){
     
     switch(obj.type){

@@ -1,8 +1,14 @@
 
     'use strict';
-
+    
     var app = app || {};
-
+    
+	var App = App || {};
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
     app.prototype.pointerlockInit = function(){
 
         var blocker = document.getElementById( 'blocker' );
@@ -73,4 +79,4 @@
         } else {
             instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
         }
-    }
+    };

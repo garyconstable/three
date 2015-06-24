@@ -1,12 +1,16 @@
 
 
     'use strict';
-
+    
     var app = app || {};
     
+	var App = App || {};
     
     
-    
+    /**
+     * 
+     * @returns {undefined}
+     */
     app.prototype.loadDefaultScene = function(){
         
         $("#pageLoad").load("/projects/grid/grid.html");
@@ -26,9 +30,14 @@
           }
           
         });  
-    }
+    };
     
-
+    /**
+     * 
+     * @param {type} el
+     * @param {type} value
+     * @returns {undefined}
+     */
     app.prototype.sliderUpdate = function(el, value){
 
         var _elem = $(el),
@@ -45,13 +54,23 @@
         App.sceneObjects[selectedObj][_type][_dir] = _val;
     };
     
-    
-    
-    
-    
+    /**
+     * 
+     * @returns {undefined}
+     */
     app.prototype.bindings = function(){
         
         var _this = this;
+        
+        
+        $(document).on('change', '.slider', function(e){
+            var _elem = $(this),
+                _type = $(_elem).data('type'),
+                _dir  = $(_elem).data('value');
+
+            _this.setStorage( _type, _dir, $(this).val() );
+        });
+        
         
         $(document).on('click', '#sidebar-toggle', function(e){
             if( $('#sidebar').css('left') === '0px' ){
@@ -82,11 +101,15 @@
         
     };
     
-    
-    
-    
-    
+    /**
+     * 
+     * @param {type} name
+     * @returns {undefined}
+     */
     app.prototype.addObjectToObjectSelect = function(name){
-        $('#objectSelect').append($('<option>', { value : name }).text(name)); 
+        
+        if ( $("#objectSelect option[value='"+name+"']").length < 1 ){
+            $('#objectSelect').append($('<option>', { value : name }).text(name)); 
+        }
     };
 
