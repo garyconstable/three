@@ -22,6 +22,7 @@ _ .-') _            (`\ .-') /`            _  .-')            _ .-') _    .-')
             //console.log(err)
         }
         
+        this.firebaseScene = null;
         this.version = 1;  
         
 		return this;

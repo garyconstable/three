@@ -5,6 +5,7 @@
     var app = app || {};
 
     var App = App || {};
+    
 
 
     /**
@@ -85,30 +86,48 @@
      */
     app.prototype.getStorage = function(object, property){
         var _scene = JSON.parse(localStorage.getItem(this.app_name));
-        return _scene[object][property]
+        return _scene[object][property];
     };
 
-    /**
-     * 
-     * @returns {undefined}
-     */
-    app.prototype.loadSceneObjectsFromStorage = function(){
 
-        console.log(localStorage)
 
-        //localStorage.clear();
 
-        var _this = this;
 
+
+
+    app.prototype.sceneLoad = function(){
+        
+        
         var _scene = JSON.parse(localStorage.getItem(this.app_name));
+        
+        var _this = this;
+        
+        
+        
+        if ( _this.firebaseScene !== null ){
+            
 
-        if( !_scene){
+            console.log('----> load from firebase', _this.firebaseScene);
 
-            console.log('----> load from config');
+            var _count = 0;
 
-            this.loadFromDefaults();
+            for (var key in _this.firebaseScene ) {
 
-        }else{
+                var obj = _scene[key];
+
+                if( _count === 0 ){
+                    _this.selectedObject = key;
+                }
+
+                _this.loadGeometry(obj, key, false);
+
+                _count++;
+
+            }
+
+
+        }else if( _scene){
+
 
             console.log('----> load from storage');
 
@@ -128,9 +147,70 @@
 
             }
 
-        }
+        }else{
 
+            console.log('----> load from config');
+
+            _this.loadFromDefaults();
+
+        }
     };
+    
+    
+    
+
+
+
+
+    /**
+     * 
+     * @returns {undefined}
+     */
+    app.prototype.loadSceneObjectsFromStorage = function(){
+        
+        
+        this.SceneFromFireBase();
+
+        var _this = this;
+        
+        var _keepTrying = true;
+   
+        
+        setTimeout(function(){
+            _keepTrying = false;
+        },3000);
+        
+
+        var checkFirebaseInterval = setInterval(function(){
+            
+            if ( typeof _this.firebaseScene !== null  && typeof _this.firebaseScene !== "undefined"  ) {
+                
+                clearInterval(checkFirebaseInterval);
+                
+                console.log('----> load firebase data');
+                
+                _this.sceneLoad();
+                
+            };
+            
+            
+            
+            if( _keepTrying === false ){
+                clearInterval(checkFirebaseInterval);
+            }
+
+        }, 500);
+        
+
+        
+    };
+
+
+
+
+
+
+
 
     /**
      * 
@@ -162,18 +242,48 @@
                     _count++;
 
                 }
-                
-                
-                
+      
                 _this.SceneToFirebase();
                 
-                
-
             }
 
         });
 
     };
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    app.prototype.SceneFromFireBase = function(){
+        
+        var _this = this;
+        
+        var _scene = null;
+        
+        var myFirebaseRef = new Firebase("https://threejs-scene.firebaseio.com/");
+
+        myFirebaseRef.once("value", function(snapshot) {
+
+           var data = snapshot.exportVal();
+           
+           _this.firebaseScene = data[_this.app_name];
+           
+           console.log(  _this.firebaseScene );
+           
+
+        });
+
+    };
+    
+    
+    
+    
+    
     
     
     /**
@@ -186,7 +296,8 @@
         
         if( _scene ){
             
-            var obj = {}
+            var obj = {};
+            
             obj[this.app_name] = _scene;
             
             var myFirebaseRef = new Firebase("https://threejs-scene.firebaseio.com/");
@@ -195,4 +306,4 @@
 
         }
         
-    }
+    };
