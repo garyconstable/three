@@ -90,6 +90,34 @@
             "z" : 1
         }
             
+    },
+    
+    "box": {
+       
+        "type"              : "BoxGeometry",
+        "width"             : 1,
+        "height"            : 1,
+        "depth"             : 1,
+        "widthSegments"     : 1,
+        "heightSegments"    : 1,
+        "depthSegments"     : 1,
+        
+        "position"          : {
+            "x" : 500,
+            "y" : 0,
+            "z" : 0
+        },
+        "rotation"          : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+        },
+        "scale"             : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+        }
+            
     }
     
 }
