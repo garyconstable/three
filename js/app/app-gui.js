@@ -73,10 +73,16 @@
         
         
         $(document).on('click', '#sidebar-toggle', function(e){
+
             if( $('#sidebar').css('left') === '0px' ){
+
                 $('#sidebar').css({ left :'-250px'});
+                $('#console').css({ right :'-450px'});
+
             }else{
+
                 $('#sidebar').css({left: 0});
+                $('#console').css({ right : '15px'});
             }
         });
         

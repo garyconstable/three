@@ -12,6 +12,31 @@ _ .-') _            (`\ .-') /`            _  .-')            _ .-') _    .-')
 
     'use strict';
 
+
+
+    if (typeof console  != "undefined"){
+        if (typeof console.log !== 'undefined'){
+            console.olog = console.log;
+        }else{
+            console.olog = function() {};
+        }
+    } 
+        
+    console.log = function(message) {
+        console.olog(message);
+        $('#console').append('<p>' + message + '</p>');
+
+        console.olog( $('#console').scrollTop)
+        console.olog( $('#console').prop('scrollHeight') )
+
+        $('#console').prop('scrollTop', $('#console').prop('scrollHeight') );
+    };
+
+    console.error = console.debug = console.info =  console.log
+
+
+
+
 	var app = function(){
 		
         try {

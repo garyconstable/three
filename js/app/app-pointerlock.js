@@ -27,8 +27,11 @@
                     _this.controls.enabled = true;
                     blocker.style.display = 'none';
                     document.getElementById('sidebar').style.left = '-255px';
+                    document.getElementById('console').style.right = '-450px';
                 } else {                  
                     document.getElementById('sidebar').style.left = '0';
+                    document.getElementById('console').style.right = '15px';
+
                     _this.controls.enabled = false;
                     blocker.style.display = '-webkit-box';
                     blocker.style.display = '-moz-box';
