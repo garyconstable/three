@@ -13,7 +13,7 @@
      */
     app.prototype.loadDefaultScene = function(){
         
-        $("#pageLoad").load("/projects/grid/grid.html");
+        $("#pageLoad").load("/projects/particles/particles.html");
         
         $('#projectSelect').change(function(e){
             
@@ -89,6 +89,7 @@
         $(document).on('change', '#objectSelect', function(e){
             _this.selectedObject = $(this).val();
         });
+        
         
         
         $('.resetScene').click(function(e){

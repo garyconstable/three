@@ -25,10 +25,6 @@ _ .-') _            (`\ .-') /`            _  .-')            _ .-') _    .-')
     console.log = function(message) {
         console.olog(message);
         $('#console').append('<p>' + message + '</p>');
-
-        console.olog( $('#console').scrollTop)
-        console.olog( $('#console').prop('scrollHeight') )
-
         $('#console').prop('scrollTop', $('#console').prop('scrollHeight') );
     };
 
@@ -52,6 +48,9 @@ _ .-') _            (`\ .-') /`            _  .-')            _ .-') _    .-')
         
 		return this;
 	};
+    
+    
+    
 
 	var App = App || {};
 	 	
