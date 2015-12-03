@@ -152,50 +152,53 @@
         }
     };
 
+
+
     /**
      *
      * @returns {undefined}
      */
     app.prototype.loadSceneObjectsFromStorage = function(){
-
-
-        this.SceneFromFireBase();
-
+        
         var _this = this;
-
-        var _keepTrying = true;
-
-
-        setTimeout(function(){
-            _keepTrying = false;
-        },3000);
-
-
-        var checkFirebaseInterval = setInterval(function(){
-
-            if ( typeof _this.firebaseScene !== null  && typeof _this.firebaseScene !== "undefined"  ) {
-
-                clearInterval(checkFirebaseInterval);
-
-                console.log('----> load firebase data');
-
-                _this.sceneLoad();
-
-            };
-
-
-
-            if( _keepTrying === false ){
-                clearInterval(checkFirebaseInterval);
-                console.log('trying failed')
-                _this.sceneLoad();
-            }
-
-        }, 500);
-
-
-
+        _this.sceneLoad();
+        
+        //        this.SceneFromFireBase();
+        //
+        //        var _this = this;
+        //
+        //        var _keepTrying = true;
+        //
+        //
+        //        setTimeout(function(){
+        //            _keepTrying = false;
+        //        },3000);
+        //
+        //
+        //        var checkFirebaseInterval = setInterval(function(){
+        //
+        //            if ( typeof _this.firebaseScene !== null  && typeof _this.firebaseScene !== "undefined"  ) {
+        //
+        //                clearInterval(checkFirebaseInterval);
+        //
+        //                console.log('----> load firebase data');
+        //
+        //                _this.sceneLoad();
+        //
+        //            };
+        //
+        //
+        //
+        //            if( _keepTrying === false ){
+        //                clearInterval(checkFirebaseInterval);
+        //                console.log('trying failed')
+        //                _this.sceneLoad();
+        //            }
+        //
+        //        }, 500);
     };
+
+
 
     /**
      *

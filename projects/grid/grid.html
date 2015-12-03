@@ -6,17 +6,18 @@
     var app = function(){
       
         try {
+            //add the change events for GUI elemenets (sliders etc..)
             this.bindings();
+            
+            //delet ethe existong screne and camer etc.. start new objects
             this.cleanup();
         }
         catch(err) {
-            //console.log(err)
+            console.log(err)
         }
         
 		this.version = 1;  
-		return this;
-        
-        
+		return this;  
 	};
 
 	var App = App || {};

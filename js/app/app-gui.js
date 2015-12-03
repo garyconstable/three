@@ -90,8 +90,6 @@
             _this.selectedObject = $(this).val();
         });
         
-        
-        
         $('.resetScene').click(function(e){
             console.log('clicked')
             e.preventDefault();
@@ -114,6 +112,8 @@
      * @returns {undefined}
      */
     app.prototype.addObjectToObjectSelect = function(name){
+        
+        console.log('ADD Objects to scene', name)
         
         if ( $("#objectSelect option[value='"+name+"']").length < 1 ){
             $('#objectSelect').append($('<option>', { value : name }).text(name)); 

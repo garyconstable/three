@@ -1,15 +1,22 @@
-
+    
+    
+    
+    var mouseVector = new THREE.Vector3(0,0,0);
+    var onMouseMove = function(e){
+        mouseVector = new THREE.Vector3(e.clientX,e.clientY,0);
+    };
+    document.addEventListener( 'mousemove', onMouseMove, false );
  	
+    
+    
+    
+    
     'use strict';
     
     var app = app || {};
     
 	var App = App || {};
-    
-    
-    var clientX = 0;
-    var clientY = 0;
-    
+
     
     
     //init / setup
@@ -164,7 +171,7 @@
         
         var _this = this;
        
-        //console.log(  mousePos )
+        console.log(  mousePos )
         
         
         
@@ -200,25 +207,24 @@
        
     };
    
+   
     app.prototype.animate = function(){
         
         var _this = this;
         
-        
-        var vector = new THREE.Vector3();      
-        vector.set( ( clientX / window.innerWidth ) * 2 - 1, - ( clientY / window.innerHeight ) * 2 + 1, 0.5 );
+        var vector = mouseVector;    
         vector.unproject( App.camera );
         var dir = vector.sub( App.camera.position ).normalize();
         var distance = - App.camera.position.z / dir.z;
         var mousePos = App.camera.position.clone().add( dir.multiplyScalar( distance ) );
-        
-  console.log(mousePos);
        
+
         if (typeof App.render == 'function') { 
             App.render( mousePos );
             App.renderer.render( App.scene, App.camera );
             requestAnimationFrame( App.animate );
         }
+        
     };
 
 
@@ -228,16 +234,8 @@
 
     //create object and run
     App = new app().loadWorld();
-    
-     $('canvas').mousemove(function(e){
-        clientX = e.clientX;
-        clientY = e.clientY;
-    });
-    
+
     App.animate();
-    
-    
-   
 
     //A info - world / app obj
     console.log(App);

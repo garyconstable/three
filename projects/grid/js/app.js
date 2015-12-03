@@ -7,8 +7,6 @@
 	var App = App || {};
     
     
-    
-    
     //init / setup
     app.prototype.init = function() {
         this.app_name = "Grid";  

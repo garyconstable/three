@@ -15,6 +15,8 @@ var App = App || {};
  */
 app.prototype.loadGeometry = function( obj, name, saveData ){
     
+    console.log('loadGeometry', obj, name, saveData)
+    
     switch(obj.type){
         
         case "cylinder" : 
