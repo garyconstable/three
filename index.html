@@ -1,12 +1,11 @@
 <!doctype html>
 <html lang="en">
-<head>
+<head>  
   <title>Three.js Playground | Gary Constable | Web Developer, Exeter, Devon</title>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="/css/styles.css" />
-  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
-  <script src="/bower_components/three.js/three.min.js"></script>
-  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  
+  
+
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -15,11 +14,20 @@
     ga('create', 'UA-48117621-1', 'garyconstable.co.uk');
     ga('send', 'pageview');
   </script>
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+  
+  <script>window.loadApplication = 'particles';</script>
+  <script data-main="/assets/js/main" src="/assets/js/vendor/require.2.1.22.js"></script>
+  
+  
+  
 </head>
 <body>
-  
   <div id="console"></div>
-
   <div id="sidebar">
     <div id="sidebar-toggle">HUD</div>
     <div id="blocker">
@@ -27,62 +35,52 @@
         <span>Enable First Person View</span>
       </div>
     </div>
-    
     <hr>
-    
     <select id="projectSelect" class="form-control">
-      <!-- <option value="0">Scene select...</option> -->
       <option value="particles">Particles</option>
       <option value="grid">Grid</option>
       <option value="maze">Maze</option>
     </select>
-
     <hr>
-    
-    <select id="objectSelect" class="form-control">
-    </select>
-
+    <select id="objectSelect" class="form-control"></select>
     <hr>
-    
     <label>X Pos: <input class="slider" data-type='position' data-value="x" type="range" min="-500" max="500" value="0" step="1" id="posX" oninput="App.sliderUpdate(this, value);" ></label>
     <label>Y Pos: <input class="slider" data-type='position' data-value="y" type="range" min="-500" max="500" value="0" step="1" id="posY" oninput="App.sliderUpdate(this, value);" ></label>
     <label>Z Pos: <input class="slider" data-type='position' data-value="z" type="range" min="-500" max="500" value="0" step="1" id="posZ" oninput="App.sliderUpdate(this, value);" ></label>
-    
     <hr>
     <label>X Rot: <input class="slider" data-type='rotation' data-value="x" type="range" min="0" max="360" value="180" step="1" id="rotX" oninput="App.sliderUpdate(this, value);" ></label>
     <label>Y Rot: <input class="slider" data-type='rotation' data-value="y" type="range" min="0" max="360" value="180" step="1" id="rotY" oninput="App.sliderUpdate(this, value);" ></label>
     <label>Z Rot: <input class="slider" data-type='rotation' data-value="z" type="range" min="0" max="360" value="180" step="1" id="rotZ" oninput="App.sliderUpdate(this, value);" ></label>
-    
     <hr>
     <label>X &nbsp;&nbsp;%: <input class="slider" data-type='scale' data-value="x" type="range" min="-100" max="100" value="1" step="1" id="scaX" oninput="App.sliderUpdate(this, value);" ></label>
     <label>Y &nbsp;&nbsp;%: <input class="slider" data-type='scale' data-value="y" type="range" min="-100" max="100" value="1" step="1" id="scaY" oninput="App.sliderUpdate(this, value);" ></label>
     <label>Z &nbsp;&nbsp;%: <input class="slider" data-type='scale' data-value="z" type="range" min="-100" max="100" value="1" step="1" id="scaZ" oninput="App.sliderUpdate(this, value);" ></label>
-    
-    
     <hr>
     <a href="#" class="resetScene" style="cursor:pointer">Reset Scene</a>
-    
   </div>
-  
   <div id="pageLoad"></div>
   
-  
-  
-  <script src="https://cdn.firebase.com/js/client/2.2.7/firebase.js"></script>
-  
+   
+   
   
 
+  
+  
+  <!--
+  <script src="/assets/bower_components/three.js/three.min.js"></script>
+  <script src="/assets/bower_components/jquery/dist/jquery.min.js"></script>
   <script src="/js/app/app-base.js"></script>
   <script src="/js/app/app-gui.js"></script>
   <script src="/js/app/app-storage.js"></script> 
   <script src="/js/app/app-sceneloader.js"></script> 
   <script src="/js/app/app-functions.js"></script> 
-
   <script>
     'use strict';
     var Loader = new app();
     Loader.loadDefaultScene();
   </script>
+  -->
+  
   
 </body>
 </html>

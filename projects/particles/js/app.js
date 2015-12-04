@@ -171,9 +171,7 @@
         
         var _this = this;
        
-        console.log(  mousePos )
-        
-        
+        //console.log(  mousePos )
         
         //move the particles
         for( var i = 0; i < _this.pool.length; i++ ){

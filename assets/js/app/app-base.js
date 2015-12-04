@@ -12,8 +12,6 @@ _ .-') _            (`\ .-') /`            _  .-')            _ .-') _    .-')
 
     'use strict';
 
-
-
     if (typeof console  != "undefined"){
         if (typeof console.log !== 'undefined'){
             console.olog = console.log;
@@ -30,27 +28,15 @@ _ .-') _            (`\ .-') /`            _  .-')            _ .-') _    .-')
 
     console.error = console.debug = console.info =  console.log
 
-
-
-
 	var app = function(){
-		
         try {
             this.bindings();
             this.cleanup();
         }
-        catch(err) {
-            //console.log(err)
-        }
-        
+        catch(err) {/*console.log(err)*/}
         this.firebaseScene = null;
-        this.version = 1;  
-        
+        this.version = 1;          
 		return this;
 	};
-    
-    
-    
-
 	var App = App || {};
 	 	
