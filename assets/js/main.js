@@ -53,5 +53,5 @@ require([
     'three',
     '/assets/js/application.js' 
 ], function ($, Firebase, THREE, app){ 
-    /* console.log( $ ) */ 
+    console.log(app)
 });

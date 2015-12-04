@@ -2,8 +2,7 @@
 (function ( define, moduleList ) {
     "use strict";
 	define(moduleList, function () {
-        var app = 'Hello world';
-        return app;
+        return '---> Require Complete';
     });
 }(define, moduleList));
 
