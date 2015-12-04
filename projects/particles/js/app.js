@@ -1,6 +1,42 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    //particles one app
+    define( 'ParticlesOne', [
+        'appBase',   
+        'particleOne', 
+        'particles',
+        'appGui',
+        'appStorage',
+        'appSceneLoader',
+        'appFunction'
+    ], function(){
+        
+        var ParticlesOne = function(){
+            
+            console.log('dwwd');
+            
+            this.construct  = function(){
+                console.log('---> Particles  One');
+            };
+            
+            this.construct.apply(this, arguments);
+        };
+
+        return [ParticlesOne.construct];
+    });
+
+    
+    
+    
+    
+    /*
     var mouseVector = new THREE.Vector3(0,0,0);
     var onMouseMove = function(e){
         mouseVector = new THREE.Vector3(e.clientX,e.clientY,0);
@@ -77,6 +113,8 @@
      * load a floow grid
      * @returns {undefined}
      */
+    
+    /*
     app.prototype.loadGrid = function(){
         var line_material = new THREE.LineBasicMaterial( { color: 0x303030 } ),
             geometry = new THREE.Geometry(),
@@ -146,6 +184,8 @@
      * load the world ...
      * @returns {app.prototype}
      */
+    
+    /*
     app.prototype.loadWorld = function(){
         
         var _this = this;
@@ -237,3 +277,4 @@
 
     //A info - world / app obj
     console.log(App);
+    */
