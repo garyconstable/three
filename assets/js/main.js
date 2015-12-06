@@ -24,7 +24,7 @@ require.config({
         
         //maps
         mapOne                  : '/assets/js/maps/map-0001',
-        mapTwo                  : '/assets/js/maps/map-0001',
+        mapTwo                  : '/assets/js/maps/map-0002',
         
         //models
         teapot                  : '/assets/js/models/teapot.js',
@@ -43,10 +43,10 @@ require.config({
         
         
         
-        
-        
         //projects
-        particles               : '/projects/particles/js/app'
+        grid                    : '/projects/grid',
+        maze                    : '/projects/maze',
+        particles               : '/projects/particles'
     },
     shim: {
         three: {
@@ -57,12 +57,14 @@ require.config({
 
 
 //define the module
-var modules = [];
-modules['particles'] = ['particles'];
-
+var projects = {
+    grid        : ['grid'],
+    particles   : ['particles'],
+    maze        : ['maze'],
+};
 
 //loadApplication is a tag in the HTML template
-window.moduleList = modules[window.loadApplication];
+window.project = projects[window.loadApplication];
 
 
 //load the main app file

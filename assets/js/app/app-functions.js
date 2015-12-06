@@ -6,7 +6,7 @@
     ], function (app) {
 
         console.log('---> AppFunctions');
-    
+        
         /**
          * 
          * --

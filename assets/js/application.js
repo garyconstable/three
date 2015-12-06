@@ -1,9 +1,9 @@
 
-(function ( define, moduleList ) {
+(function ( define, project ) {
     "use strict";
-	define(moduleList, function () {
+	define(project, function () {
         return '---> Require Complete';
     });
-}(define, moduleList));
+}(define, project));
 
 

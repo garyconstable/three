@@ -105,7 +105,7 @@
             var material = new THREE.PointCloudMaterial({
                color: 0xffffff,
                //map: THREE.ImageUtils.loadTexture('filename.png'),
-               size: 4,
+               size: 2,
                blending: THREE.AdditiveBlending,
                depthTest: false,
                transparent: true,
@@ -154,7 +154,7 @@
 
             //app specific
             this.loadGrid();
-            this.particles(500);
+            this.particles(12500);
             return this;
         };
         
@@ -215,17 +215,11 @@
             }
 
         };
-        
-        
-        
+
         //create object and run
         App = new app().loadWorld();
         App.animate();
-
-        //A info - world / app obj
         console.log(App);
-        
-       
     });
 
 
