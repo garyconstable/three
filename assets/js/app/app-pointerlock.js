@@ -1,85 +1,100 @@
-
+    
+    
     'use strict';
     
-    var app = app || {};
-    
-	var App = App || {};
-    
-    /**
-     * 
-     * @returns {undefined}
-     */
-    app.prototype.pointerlockInit = function(){
+    define([
+        'appBase',   
+    ], function (app) {
+        
+        //        var app = app || {};
+        //
+        //        var App = App || {};
 
-        var blocker = document.getElementById( 'blocker' );
-        var instructions = document.getElementById( 'instructions' );
-        var _this = this;
-        // http://www.html5rocks.com/en/tutorials/pointerlock/intro/
+        /**
+         * 
+         * @returns {undefined}
+         */
+        app.prototype.pointerlockInit = function(){
 
-        var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+            var blocker = document.getElementById( 'blocker' );
+            var instructions = document.getElementById( 'instructions' );
+            var _this = this;
+            // http://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
-        if ( havePointerLock ) {
-            
-            var element = document.body;
-            var pointerlockchange = function ( event ) {
+            var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
-                if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
-                    _this.controls.enabled = true;
-                    blocker.style.display = 'none';
-                    document.getElementById('sidebar').style.left = '-255px';
-                    document.getElementById('console').style.right = '-450px';
-                } else {                  
-                    document.getElementById('sidebar').style.left = '0';
-                    document.getElementById('console').style.right = '15px';
+            if ( havePointerLock ) {
 
-                    _this.controls.enabled = false;
-                    blocker.style.display = '-webkit-box';
-                    blocker.style.display = '-moz-box';
-                    blocker.style.display = 'box';
+                var element = document.body;
+                var pointerlockchange = function ( event ) {
+
+                    if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
+                        _this.controls.enabled = true;
+                        blocker.style.display = 'none';
+                        document.getElementById('sidebar').style.left = '-255px';
+                        document.getElementById('console').style.right = '-450px';
+                    } else {                  
+                        document.getElementById('sidebar').style.left = '0';
+                        document.getElementById('console').style.right = '15px';
+
+                        _this.controls.enabled = false;
+                        blocker.style.display = '-webkit-box';
+                        blocker.style.display = '-moz-box';
+                        blocker.style.display = 'box';
+                        instructions.style.display = '';
+                    }
+                }
+
+                var pointerlockerror = function ( event ) {
                     instructions.style.display = '';
                 }
-            }
 
-            var pointerlockerror = function ( event ) {
-                instructions.style.display = '';
-            }
+                // Hook pointer lock state change events
+                document.addEventListener( 'pointerlockchange', pointerlockchange, false );
+                document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
+                document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
 
-            // Hook pointer lock state change events
-            document.addEventListener( 'pointerlockchange', pointerlockchange, false );
-            document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
-            document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
+                document.addEventListener( 'pointerlockerror', pointerlockerror, false );
+                document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
+                document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
 
-            document.addEventListener( 'pointerlockerror', pointerlockerror, false );
-            document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
-            document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
+                instructions.addEventListener( 'click', function ( event ) {
 
-            instructions.addEventListener( 'click', function ( event ) {
+                    instructions.style.display = 'none';
 
-                instructions.style.display = 'none';
+                    // Ask the browser to lock the pointer
+                    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
-                // Ask the browser to lock the pointer
-                element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-
-                if ( /Firefox/i.test( navigator.userAgent ) ) {
-                    var fullscreenchange = function ( event ) {
-                        if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
-                            document.removeEventListener( 'fullscreenchange', fullscreenchange );
-                            document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
-                            element.requestPointerLock();
+                    if ( /Firefox/i.test( navigator.userAgent ) ) {
+                        var fullscreenchange = function ( event ) {
+                            if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
+                                document.removeEventListener( 'fullscreenchange', fullscreenchange );
+                                document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
+                                element.requestPointerLock();
+                            }
                         }
+                        document.addEventListener( 'fullscreenchange', fullscreenchange, false );
+                        document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
+                        element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+                        element.requestFullscreen();
+
+                    } else {
+                        element.requestPointerLock();
                     }
-                    document.addEventListener( 'fullscreenchange', fullscreenchange, false );
-                    document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
-                    element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-                    element.requestFullscreen();
 
-                } else {
-                    element.requestPointerLock();
-                }
+                }, false );
 
-            }, false );
+            } else {
+                instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+            }
+        };
+    
+        console.log('---> AppPointerLockControls');
+        
+    });
 
-        } else {
-            instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
-        }
-    };
+
+
+    
+    
+   

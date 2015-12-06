@@ -1,10 +1,13 @@
 
+console.time('---> App load:');
 
 //define all the files we may need to load
 require.config({
+    
     paths: {
         
         //app
+        appConsole              : '/assets/js/app/app-console',
         appBase                 : '/assets/js/app/app-base',
         appDefault              : '/assets/js/app/app-default',
         appFunction             : '/assets/js/app/app-functions',
@@ -14,32 +17,48 @@ require.config({
         appSceneLoader          : '/assets/js/app/app-sceneloader',
         appStorage              : '/assets/js/app/app-storage',
         
+        //controls
+        orbitControls           : '/assets/js/controls/orbit_controls',
+        pointerLockControls     : '/assets/js/controls/pointerlock-controls',
+        dragPanControls         : '/assets/js/controls/threex.dragpancontrolls',
+        
+        //maps
+        mapOne                  : '/assets/js/maps/map-0001',
+        mapTwo                  : '/assets/js/maps/map-0001',
+        
+        //models
+        teapot                  : '/assets/js/models/teapot.js',
+        teapotObj               : '/assets/js/models/teapot.obj',
+        
+        //particles
+        particleOne             : '/assets/js/particles/particle-0001',
+        
+        //players
+        playerOne               : '/assets/js/players/player-0001',
+        
         //vendor
         firebase                : '/assets/js/vendor/firebase.2.2.7',
         jquery                  : '/assets/bower_components/jquery/dist/jquery.min',
         three                   : '/assets/bower_components/three.js/three.min',
         
-        //particles
-        particleOne             : '/assets/js/particles/particle-0001',
+        
+        
+        
         
         //projects
         particles               : '/projects/particles/js/app'
+    },
+    shim: {
+        three: {
+            exports: 'THREE'
+        }
     }
 });
 
 
 //define the module
 var modules = [];
-modules['particles'] = 
-[
-    'appBase',   
-    'particleOne', 
-    'particles',
-    'appGui',
-    'appStorage',
-    'appSceneLoader',
-    'appFunction',
-];
+modules['particles'] = ['particles'];
 
 
 //loadApplication is a tag in the HTML template
@@ -52,6 +71,7 @@ require([
     'firebase',
     'three',
     '/assets/js/application.js' 
-], function ($, Firebase, THREE, app){ 
-    console.log(app)
+], function ($, Firebase, THREE, application){ 
+    console.log(application)
+    console.timeEnd('---> App load:');
 });

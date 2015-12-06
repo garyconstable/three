@@ -1,29 +1,37 @@
 
-
-
     'use strict';
 
-    var app = app || {};
+    define([
+        'appBase'
+    ], function (app) {
 
-    var App = App || {};
+        console.log('---> AppFunctions');
     
-    /**
-     * 
-     * @param {type} degrees
-     * @returns {Number}
-     */
-    app.prototype.degToRadians = function( degrees ){
-        return degrees * (Math.PI/180);
-    };
+        /**
+         * 
+         * --
+         * @param {type} degrees
+         * @returns {Number}
+         */
+        app.prototype.degToRadians = function( degrees ){
+            return degrees * (Math.PI/180);
+        };
 
-    /**
-     * 
-     * @param {type} radians
-     * @returns {Number}
-     */
-    app.prototype.RadToDegrees = function( radians ){
-        return radians * (180/Math.PI)
-    };
+        /**
+         * 
+         * --
+         * @param {type} radians
+         * @returns {Number}
+         */
+        app.prototype.RadToDegrees = function( radians ){
+            return radians * (180/Math.PI)
+        };
+        
+    });
+
+    
+
+    
 
 
 
