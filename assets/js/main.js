@@ -1,10 +1,31 @@
 
+
 console.time('---> App load:');
+
+
+//define the module
+var projects = {
+    grid        : ['grid'],
+    particles   : ['particles'],
+    maze        : ['maze'],
+};
+
+
+//loadApplication is a tag in the HTML template
+window.project = projects[window.loadApplication];
+
 
 //define all the files we may need to load
 require.config({
     
     paths: {
+        
+        //angular
+        angular                 : '/assets/bower_components/angular/angular.min',
+        angularRoute            : '/assets/bower_components/angular-route/angular-route.min',
+        
+        //application
+        app                     : '/assets/js/application',
         
         //app
         appConsole              : '/assets/js/app/app-console',
@@ -40,9 +61,7 @@ require.config({
         firebase                : '/assets/js/vendor/firebase.2.2.7',
         jquery                  : '/assets/bower_components/jquery/dist/jquery.min',
         three                   : '/assets/bower_components/three.js/three.min',
-        
-        
-        
+
         //projects
         grid                    : '/projects/grid',
         maze                    : '/projects/maze',
@@ -52,28 +71,18 @@ require.config({
         three: {
             exports: 'THREE'
         }
-    }
+    },
+    deps: [
+        'jquery', 
+        'app'
+    ]
+    
 });
-
-
-//define the module
-var projects = {
-    grid        : ['grid'],
-    particles   : ['particles'],
-    maze        : ['maze'],
-};
-
-//loadApplication is a tag in the HTML template
-window.project = projects[window.loadApplication];
 
 
 //load the main app file
 require([
-    'jquery',
-    'firebase',
-    'three',
-    '/assets/js/application.js' 
-], function ($, Firebase, THREE, application){ 
-    console.log(application)
+    'app'
+], function (app){ 
     console.timeEnd('---> App load:');
 });
