@@ -1,7 +1,5 @@
     
     
-    
-    
     'use strict';
     
     define([
@@ -14,27 +12,34 @@
         'appFunction',
         'particleOne'
     ], function (THREE, app, cs, gui, storage, sceneloader, functions, particleOne) {
-        
+    
         console.log('---> Particles App');
-        
-        
-        var mouseVector = new THREE.Vector3(0,0,0);
-        var onMouseMove = function(e){
-            mouseVector = new THREE.Vector3(e.clientX,e.clientY,0);
+
+    
+    
+        var mouseVector = new THREE.Vector3(100,100,0);
+        var onMouseMove = function(e){        
+            //mouseVector = functions.mousePosition3D(e.clientX, e.clientY, 0, App);
+            console.log(mouseVector)    
+            
+            mouseVector = new THREE.Vector3(100,100,0);
         };
-        document.addEventListener( 'mousemove', onMouseMove, false );
-        
-        
+        document.addEventListener('click', onMouseMove, false);
+    
+    
+    
+    
+    
+    
         //init / setup
         app.prototype.init = function() {
             this.app_name = "Partcles";  
-            //this.config_file = "/projects/grid/json/config.json";  
             this.width = window.innerWidth;
             this.height = window.innerHeight;
             this.camera = null;
             this.renderer = null;
             this.controls = null;
-            this.sceneObjects = {};
+            this.sceneObjects = {};  
         };
         
         //cleanup
@@ -160,19 +165,17 @@
         
         //renderer
         app.prototype.render = function(mousePos){ 
-        
+            
             var _this = this;
 
-            //console.log(  mousePos )
-
             //move the particles
-            for( var i = 0; i < _this.pool.length; i++ ){
-
+            for( var i = 0; i < _this.pool.length; i++ )
+            {    
                 //direction is the mouse pos
-                var dir = mousePos;
-
-                //var dir =  new THREE.Vector3(500, 500, 0);   
-
+                var dir =  mousePos;
+                var dir = new THREE.Vector3(100,-100,0);
+            
+                //dircetion
                 dir.sub( _this.pool[i].position).normalize().multiplyScalar(0.10);
 
                 //acceleration
@@ -189,18 +192,15 @@
             _this.geometry.verticesNeedUpdate = true;
             _this.geometry.colorsNeedsUpdate = true; 
 
-
-            var timer = 0.0001 * Date.now();
-            this.camera.position.x = Math.cos( timer ) * 1000;
-            this.camera.position.z = Math.sin( timer ) * 1000;
+//            var timer = 0.0001 * Date.now();
+//            this.camera.position.x = Math.cos( timer ) * 1000;
+//            this.camera.position.z = Math.sin( timer ) * 1000;
             this.camera.lookAt( this.scene.position );
         };
         
         //animate function
         app.prototype.animate = function(){
-        
-            var _this = this;
-
+            
             var vector = mouseVector;    
             vector.unproject( App.camera );
             

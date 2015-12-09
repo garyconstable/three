@@ -332,5 +332,7 @@
         };
 
         console.log('---> Particles App');
+        return app;
+        
         
     });

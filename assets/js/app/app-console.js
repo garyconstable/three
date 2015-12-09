@@ -19,4 +19,5 @@ define([
     //    };
     //    console.error = console.debug = console.info =  console.log;
     console.log('---> AppConsole'); 
+    return app;
 });

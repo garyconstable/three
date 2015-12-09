@@ -90,6 +90,8 @@
         };
     
         console.log('---> AppPointerLockControls');
+        return app;
+        
         
     });
 

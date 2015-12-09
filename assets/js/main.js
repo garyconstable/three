@@ -5,9 +5,10 @@ console.time('---> App load:');
 
 //define the module
 var projects = {
-    grid        : ['grid'],
-    particles   : ['particles'],
-    maze        : ['maze'],
+    grid            : ['grid'],
+    particles       : ['particles'],
+    particles_0001  : ['particles_0001'],
+    maze            : ['maze'],
 };
 
 
@@ -65,7 +66,8 @@ require.config({
         //projects
         grid                    : '/projects/grid',
         maze                    : '/projects/maze',
-        particles               : '/projects/particles'
+        particles               : '/projects/particles',
+        particles_0001          : '/projects/particles_0001'
     },
     shim: {
         three: {

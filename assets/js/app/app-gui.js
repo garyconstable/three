@@ -127,7 +127,10 @@
             }
         };
         
+        
+        
         console.log('---> AppGui');
+        return app;
         
     });
 

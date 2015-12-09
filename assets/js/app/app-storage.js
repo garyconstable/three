@@ -304,6 +304,9 @@
         
         
         console.log('---> AppStorage');
+        return app;
+        
+        
     });
 
 

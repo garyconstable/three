@@ -115,6 +115,8 @@
         };
         
         console.log('---> AppSceneLoader');
+        return app;
+        
         
     });
 
