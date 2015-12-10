@@ -22,18 +22,7 @@
          * --
          * @returns {app-base_L18.app}
          */
-        var app = function(){
-
-            try {
-                this.bindings();
-                this.cleanup();
-            }
-            catch(err) {
-                console.log(err)
-            }
-
-            this.firebaseScene = null;
-            this.version = 1;          
+        var app = function(){         
             return this;
         };
         
