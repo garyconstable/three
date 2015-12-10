@@ -1,5 +1,12 @@
-
- 		
+    
+    
+    define([
+        
+    ], function () {
+        console.log('---> AppDefault');
+    });
+    
+ 	/*	
     'use strict';
     
     var app = app || {};
@@ -158,6 +165,7 @@
      * load the world ...
      * @returns {app.prototype}
      */
+    /*
     app.prototype.loadWorld = function(){
 
         //must haves
@@ -201,3 +209,4 @@
 
     //render loop
     animate();
+    */

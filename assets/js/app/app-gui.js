@@ -1,122 +1,141 @@
-
-
+    
+    
     'use strict';
     
-    var app = app || {};
-    
-	var App = App || {};
-    
-    
-    /**
-     * 
-     * @returns {undefined}
-     */
-    app.prototype.loadDefaultScene = function(){
+    define([
+        'appBase',   
+    ], function (app) {
         
-        $("#pageLoad").load("/projects/particles/particles.html");
         
-        $('#projectSelect').change(function(e){
+        
+        /**
+         * 
+         * --
+         * @returns {undefined}
+         */
+        app.prototype.loadDefaultScene = function(){
             
-          if( $(this).val() !== 0  && $(this).val() !== '0'){
-            var _this = $(this);
-            $("#pageLoad").html();
-            $('canvas').remove();
+            $("#pageLoad").load("/projects/particles/particles.html");
             
-            var x = setTimeout(function(){
-              console.log('load',  _this.val() )
-              $("#pageLoad").load("/projects/" + _this.val() + "/" + _this.val() + ".html" );
-            },500);
-            
-          }
-          
-        });  
-    };
+            $('#projectSelect').change(function(e){
+                if( $(this).val() !== 0  && $(this).val() !== '0'){
+                    var _this = $(this);
+                    $("#pageLoad").html();
+                    $('canvas').remove();
+                    setTimeout(function(){
+                        console.log('load',  _this.val() )
+                        $("#pageLoad").load("/projects/" + _this.val() + "/" + _this.val() + ".html" );
+                    },500);
+                }
+            });  
+        };
     
-    /**
-     * 
-     * @param {type} el
-     * @param {type} value
-     * @returns {undefined}
-     */
-    app.prototype.sliderUpdate = function(el, value){
-
-        var _elem = $(el),
-            selectedObj = this.selectedObject;
-
-        var _type = $(_elem).data('type'),
-            _dir  = $(_elem).data('value'),
-            _val  = value;
-        
-        if ( _type === 'rotation' ){
-            _val = App.degToRadians(_val);
-        }
-        
-        App.sceneObjects[selectedObj][_type][_dir] = _val;
-    };
     
-    /**
-     * 
-     * @returns {undefined}
-     */
-    app.prototype.bindings = function(){
-        
-        var _this = this;
-        
-        
-        $(document).on('change', '.slider', function(e){
-            var _elem = $(this),
-                _type = $(_elem).data('type'),
-                _dir  = $(_elem).data('value');
+    
+        /**
+         * 
+         * --
+         * @param {type} el
+         * @param {type} value
+         * @returns {undefined}
+         */
+        app.prototype.sliderUpdate = function(el, value){
 
-            _this.setStorage( _type, _dir, $(this).val() );
-        });
-        
-        
-        $(document).on('click', '#sidebar-toggle', function(e){
+            var _elem = $(el),
+                selectedObj = this.selectedObject;
 
-            if( $('#sidebar').css('left') === '0px' ){
+            var _type = $(_elem).data('type'),
+                _dir  = $(_elem).data('value'),
+                _val  = value;
 
-                $('#sidebar').css({ left :'-250px'});
-                $('#console').css({ right :'-450px'});
-
-            }else{
-
-                $('#sidebar').css({left: 0});
-                $('#console').css({ right : '15px'});
+            if ( _type === 'rotation' ){
+                _val = App.degToRadians(_val);
             }
-        });
-        
-        $(document).on('change', '#objectSelect', function(e){
-            _this.selectedObject = $(this).val();
-        });
-        
-        $('.resetScene').click(function(e){
-            console.log('clicked')
-            e.preventDefault();
-            localStorage.removeItem(_this.app_name);
 
-            $("#pageLoad").html();
-            $('canvas').remove();
-            var x = setTimeout(function(){
-              location.reload();
-            },500);
-            
-        });
-        
-        
-    };
+            App.sceneObjects[selectedObj][_type][_dir] = _val;
+        };
     
-    /**
-     * 
-     * @param {type} name
-     * @returns {undefined}
-     */
-    app.prototype.addObjectToObjectSelect = function(name){
+    
+    
+        /**
+         * 
+         * --
+         * @returns {undefined}
+         */
+        app.prototype.bindings = function(){
+
+            var _this = this;
+
+
+            $(document).on('change', '.slider', function(e){
+                var _elem = $(this),
+                    _type = $(_elem).data('type'),
+                    _dir  = $(_elem).data('value');
+
+                _this.setStorage( _type, _dir, $(this).val() );
+            });
+
+
+            $(document).on('click', '#sidebar-toggle', function(e){
+
+                if( $('#sidebar').css('left') === '0px' ){
+
+                    $('#sidebar').css({ left :'-250px'});
+                    $('#console').css({ right :'-450px'});
+
+                }else{
+
+                    $('#sidebar').css({left: 0});
+                    $('#console').css({ right : '15px'});
+                }
+            });
+
+            $(document).on('change', '#objectSelect', function(e){
+                _this.selectedObject = $(this).val();
+            });
+
+            $('.resetScene').click(function(e){
+                console.log('clicked')
+                e.preventDefault();
+                localStorage.removeItem(_this.app_name);
+
+                $("#pageLoad").html();
+                $('canvas').remove();
+                var x = setTimeout(function(){
+                  location.reload();
+                },500);
+
+            });
+
+
+        };
+    
+    
+    
+        /**
+         * 
+         * --
+         * @param {type} name
+         * @returns {undefined}
+         */
+        app.prototype.addObjectToObjectSelect = function(name){
+
+            console.log('ADD Objects to scene', name)
+
+            if ( $("#objectSelect option[value='"+name+"']").length < 1 ){
+                $('#objectSelect').append($('<option>', { value : name }).text(name)); 
+            }
+        };
         
-        console.log('ADD Objects to scene', name)
         
-        if ( $("#objectSelect option[value='"+name+"']").length < 1 ){
-            $('#objectSelect').append($('<option>', { value : name }).text(name)); 
-        }
-    };
+        
+        console.log('---> AppGui');
+        return app;
+        
+    });
+
+
+    
+    
+    
 

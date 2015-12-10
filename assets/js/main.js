@@ -1,11 +1,39 @@
 
 
+console.time('---> App load:');
+
+
+//define the module
+var projects = {
+    grid            : ['grid'],
+    particles       : ['particles'],
+    particles_0001  : ['particles_0001'],
+    maze            : ['maze'],
+    shader2         : ['shader_0002'],
+};
+
+
+//loadApplication is a tag in the HTML template
+//window.project = projects[window.loadApplication];
+
+
+window.project = projects.shader2;
+
+
 //define all the files we may need to load
 require.config({
     
     paths: {
         
+        //angular
+        angular                 : '/assets/bower_components/angular/angular.min',
+        angularRoute            : '/assets/bower_components/angular-route/angular-route.min',
+        
+        //application
+        app                     : '/assets/js/application',
+        
         //app
+        appConsole              : '/assets/js/app/app-console',
         appBase                 : '/assets/js/app/app-base',
         appDefault              : '/assets/js/app/app-default',
         appFunction             : '/assets/js/app/app-functions',
@@ -16,61 +44,52 @@ require.config({
         appStorage              : '/assets/js/app/app-storage',
         
         //controls
-        orbitControls           : '/assets/js/controls/orbit-controls',
+        orbitControls           : '/assets/js/controls/orbit_controls',
         pointerLockControls     : '/assets/js/controls/pointerlock-controls',
-        dragPanControls         : '/assets/js/controls/threex.dragpancontrols',
+        dragPanControls         : '/assets/js/controls/threex.dragpancontrolls',
         
         //maps
-        mazeOne                 : '/assets/js/maps/map-0001',
-        mazeTwo                 : '/assets/js/maps/map-0002',
+        mapOne                  : '/assets/js/maps/map-0001',
+        mapTwo                  : '/assets/js/maps/map-0002',
         
         //models
-        teaPotJs                : '/assets/js/models/teapot.js',
-        teaPotObj               : '/assets/js/models/teapot.obj',
+        teapot                  : '/assets/js/models/teapot.js',
+        teapotObj               : '/assets/js/models/teapot.obj',
         
         //particles
         particleOne             : '/assets/js/particles/particle-0001',
         
         //players
-        payerOne                : '/assets/js/players/player-0001',
+        playerOne               : '/assets/js/players/player-0001',
         
         //vendor
         firebase                : '/assets/js/vendor/firebase.2.2.7',
         jquery                  : '/assets/bower_components/jquery/dist/jquery.min',
         three                   : '/assets/bower_components/three.js/three.min',
-       
+
         //projects
-        particles               : '/projects/particles/js/app',
-    }
+        grid                    : '/projects/grid',
+        maze                    : '/projects/maze',
+        particles               : '/projects/particles',
+        particles_0001          : '/projects/particles_0001',
+        shader_0002             : '/projects/shader_0002'
+    },
+    shim: {
+        three: {
+            exports: 'THREE'
+        }
+    },
+    deps: [
+        'jquery', 
+        'app'
+    ]
+    
 });
-
-
-//define the module
-var modules = [];
-modules['particles'] = 
-[
-    //    'appBase',   
-    //    'particleOne', 
-    //    'particles',
-    //    'appGui',
-    //    'appStorage',
-    //    'appSceneLoader',
-    //    'appFunction',
-
-    'particles'
-];
-
-
-//loadApplication is a tag in the HTML template
-window.moduleList = modules[window.loadApplication];
 
 
 //load the main app file
 require([
-    'jquery',
-    'firebase',
-    'three',
-    '/assets/js/application.js' 
-], function ($, Firebase, THREE, app){ 
-    console.log(app);
+    'app'
+], function (app){ 
+    console.timeEnd('---> App load:');
 });
