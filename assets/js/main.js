@@ -53,7 +53,7 @@ require.config({
         appStorage              : '/assets/js/app/app-storage',
         
         //controls
-        orbitControls           : '/assets/js/controls/orbit_controls',
+        orbitControls           : '/assets/js/controls/orbit-controls',
         pointerLockControls     : '/assets/js/controls/pointerlock-controls',
         dragPanControls         : '/assets/js/controls/threex.dragpancontrolls',
         

@@ -2,15 +2,13 @@
     //this is cool"
     //http://jsfiddle.net/zyAzg/
     
-    
     'use strict';
     
     define([
         'three', 
         'appBase',   
+        'orbitControls',
     ], function (THREE, app ) {
-        
-
 
         //init / setup
         app.prototype.init = function() {
@@ -70,32 +68,57 @@
             var line_material = new THREE.LineBasicMaterial( { color: 0x303030 } ),
                 geometry = new THREE.Geometry(),
                 floor = -75, step = 25;
-
             for ( var i = 0; i <= 40; i ++ ) {
                 geometry.vertices.push( new THREE.Vector3( - 500, floor, i * step - 500 ) );
                 geometry.vertices.push( new THREE.Vector3(   500, floor, i * step - 500 ) );
                 geometry.vertices.push( new THREE.Vector3( i * step - 500, floor, -500 ) );
                 geometry.vertices.push( new THREE.Vector3( i * step - 500, floor,  500 ) );
             }
-
-            var line = new THREE.Line( geometry, line_material, THREE.LinePieces );
+            var line = new THREE.Line( geometry, line_material, THREE.LineSegments );
             this.scene.add( line );
         };
         
+        // add orbit controls to screen
+        app.prototype.addControls = function(){
+            this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
+            //controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
+            this.controls.enableDamping = true;
+            this.controls.dampingFactor = 0.25;
+            this.controls.enableZoom = false;
+        }
+
+        //renderer
+        app.prototype.render = function(){ 
+            this.sceneObjects.centerPoint.rotation.z += 0.01;
+            this.controls.update(); // required if controls.enableDamping = true, or if controls.autoRotate = true
+            this.renderer.render( this.scene, this.camera ); 
+        };
+
+        //animate function
+        app.prototype.animate = function(){
+            if (typeof App.render === 'function') { 
+                App.render();
+                App.renderer.render( App.scene, App.camera );
+                requestAnimationFrame( App.animate );
+            }
+        };
         
+        
+        
+
         //load the world
-        app.prototype.loadWorld = function(){
-            
-            
-            //defaults
+        app.prototype.loadObjects = function(){    
+
             this.events();
             this.init();
             this.createRenderer();
             this.createScene();
             this.addCamera();
-            this.addAmbientLight();
+            //this.addAmbientLight();
             this.loadGrid();
-            
+            this.addControls();
+            this.sceneObjects = {};
+
             //hide gui parts
             $('#sidebar, #console').hide();
              
@@ -115,7 +138,7 @@
                 '}',
             ].join('\n');
             
-             //create  basic fragment shader
+            //create  basic fragment shader
             var fragmentShader = [
                 '// same name and type as VS',
                 'varying vec3 vNormal;',
@@ -142,56 +165,64 @@
             //set the caler 100 back from zeo
             this.camera.position.set( 0, 0, 100 );
             
-            //create the spehere
+            
+            //center obj
+            this.sceneObjects.centerPoint = new THREE.Object3D();
+            this.scene.add(this.sceneObjects.centerPoint);
+            
+            
+            //planet
             var geometry = new THREE.SphereGeometry( 5, 32, 32 );
-            
-            //create a basic material
-            var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-            
-            //create the shader materal
             var shaderMaterial = new THREE.ShaderMaterial({
                 vertexShader:   vertexShader,
                 fragmentShader: fragmentShader
             });
-            
-            //create the sphere from the geometry and the material
             var sphere = new THREE.Mesh( geometry, shaderMaterial );
-            
-            //set the psoition of the sphere, in the center
             sphere.position.x = 0;
             sphere.position.y = 0;
             sphere.position.z = 0;
+            this.scene.add(sphere);
             
-            //add the sphere to the scene
-            this.scene.add( sphere );    
             
-            //render the scene.
-            this.renderer.render( this.scene, this.camera );       
+            //satellite
+            var shaderMaterial = new THREE.ShaderMaterial({
+                vertexShader:   vertexShader,
+                fragmentShader: fragmentShader
+            });
+            var geometry = new THREE.SphereGeometry( 3, 16, 16 );
+            //var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+            var satellite = new THREE.Mesh( geometry,  shaderMaterial );
+            satellite.position.x = 20;
+            satellite.position.y = 20;
+            satellite.position.z = 0;
+            this.sceneObjects.centerPoint.add( satellite ); 
+            
+            
+            // add the pointlight
+            var pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
+            pointLight.position.set( -20, -20, 0 );
+            this.sceneObjects.centerPoint.add( pointLight );
+
+            var sphereSize = 1;
+            var pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+            this.sceneObjects.centerPoint.add( pointLightHelper );
+            
+            
+            
+           
+            
+            
+            
+           
         };
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-       
-        
-        
-        
-        
-
         //create object and run
         App = new app();
-        App.loadWorld();
+        App.loadObjects();
+        App.animate();
         console.log(App);
+        
+        
     });
 
 

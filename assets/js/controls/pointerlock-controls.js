@@ -1,200 +1,210 @@
-/**
- * @author mrdoob / http://mrdoob.com/
- */
-
-THREE.PointerLockControls = function ( camera, App ) {
-
-	var scope = this;
-		camera.rotation.set( 0, 0, 0 );
-		
-	var	pitchObject = new THREE.Object3D();
-		pitchObject.add( camera ),
-		yawObject = new THREE.Object3D();
-		yawObject.position.y = 10;
-		yawObject.add( pitchObject ),
-		moveForward = false,
-		moveBackward = false,
-		moveLeft = false,
-		moveRight = false,
-		isOnObject = false,
-		canJump = false,
-		prevTime = performance.now(),
-		velocity = new THREE.Vector3(),
-		PI_2 = Math.PI / 2;
-
-		this.speedMod = {
-			x: 1,
-			y: 1,
-			z: 1,
-			j: 1
-		};
-
-		this.canMoveForward = true;	
 
 
 
-	var onMouseMove = function ( event ) {
-
-		if ( scope.enabled === false ) return;
-
-		var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-		var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-
-		yawObject.rotation.y -= movementX * 0.002;
-		pitchObject.rotation.x -= movementY * 0.002;
-
-		pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
-
-	};
-
-	var onKeyDown = function ( event ) {
+    define([
+        'three'
+    ], function (THREE) {
 
 
-		switch ( event.keyCode ) {
+    /**
+     * @author mrdoob / http://mrdoob.com/
+     */
 
-			case 38: // up
-			case 87: // w
-				moveForward = true;
-				break;
+    THREE.PointerLockControls = function ( camera, App ) {
 
-			case 37: // left
-			case 65: // a
-				moveLeft = true; break;
+        var scope = this;
+            camera.rotation.set( 0, 0, 0 );
 
-			case 40: // down
-			case 83: // s
-				moveBackward = true;
-				break;
+        var	pitchObject = new THREE.Object3D();
+            pitchObject.add( camera ),
+            yawObject = new THREE.Object3D();
+            yawObject.position.y = 10;
+            yawObject.add( pitchObject ),
+            moveForward = false,
+            moveBackward = false,
+            moveLeft = false,
+            moveRight = false,
+            isOnObject = false,
+            canJump = false,
+            prevTime = performance.now(),
+            velocity = new THREE.Vector3(),
+            PI_2 = Math.PI / 2;
 
-			case 39: // right
-			case 68: // d
-				moveRight = true;
-				break;
+            this.speedMod = {
+                x: 1,
+                y: 1,
+                z: 1,
+                j: 1
+            };
 
-			case 32: // space
-				if ( canJump === true ){ 
-					velocity.y += 500;
-				}
-				canJump = false;
-				break;
+            this.canMoveForward = true;	
 
-		}
 
-	};
 
-	var onKeyUp = function ( event ) {
+        var onMouseMove = function ( event ) {
 
-		//console.log( 'keyup: ' + event.keyCode );
+            if ( scope.enabled === false ) return;
 
-		switch( event.keyCode ) {
+            var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+            var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-			case 38: // up
-			case 87: // w
-				moveForward = false;
-				break;
+            yawObject.rotation.y -= movementX * 0.002;
+            pitchObject.rotation.x -= movementY * 0.002;
 
-			case 37: // left
-			case 65: // a
-				moveLeft = false;
-				break;
+            pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
 
-			case 40: // down
-			case 83: // s
-				moveBackward = false;
-				break;
+        };
 
-			case 39: // right
-			case 68: // d
-				moveRight = false;
-				break;
+        var onKeyDown = function ( event ) {
 
-		}
 
-	};
+            switch ( event.keyCode ) {
 
-	document.addEventListener( 'mousemove', onMouseMove, false );
-	document.addEventListener( 'keydown', onKeyDown, false );
-	document.addEventListener( 'keyup', onKeyUp, false );
+                case 38: // up
+                case 87: // w
+                    moveForward = true;
+                    break;
 
-	this.enabled = false;
+                case 37: // left
+                case 65: // a
+                    moveLeft = true; break;
 
-	this.getObject = function () {
+                case 40: // down
+                case 83: // s
+                    moveBackward = true;
+                    break;
 
-		return yawObject;
+                case 39: // right
+                case 68: // d
+                    moveRight = true;
+                    break;
 
-	};
+                case 32: // space
+                    if ( canJump === true ){ 
+                        velocity.y += 500;
+                    }
+                    canJump = false;
+                    break;
 
-	this.isOnObject = function ( boolean ) {
+            }
 
-		isOnObject = boolean;
-		canJump = boolean;
+        };
 
-	};
+        var onKeyUp = function ( event ) {
 
-	this.getDirection = function() {
+            //console.log( 'keyup: ' + event.keyCode );
 
-		// assumes the camera itself is not rotated
+            switch( event.keyCode ) {
 
-		var direction = new THREE.Vector3( 0, 0, -1 );
-		var rotation = new THREE.Euler( 0, 0, 0, "YXZ" );
+                case 38: // up
+                case 87: // w
+                    moveForward = false;
+                    break;
 
-		return function( v ) {
+                case 37: // left
+                case 65: // a
+                    moveLeft = false;
+                    break;
 
-			rotation.set( pitchObject.rotation.x, yawObject.rotation.y, 0 );
+                case 40: // down
+                case 83: // s
+                    moveBackward = false;
+                    break;
 
-			v.copy( direction ).applyEuler( rotation );
+                case 39: // right
+                case 68: // d
+                    moveRight = false;
+                    break;
 
-			return v;
+            }
 
-		}
+        };
 
-	}();
+        document.addEventListener( 'mousemove', onMouseMove, false );
+        document.addEventListener( 'keydown', onKeyDown, false );
+        document.addEventListener( 'keyup', onKeyUp, false );
 
-	this.update = function () {
+        this.enabled = false;
 
-		if ( scope.enabled === false ){
-			return;	
-		} 
+        this.getObject = function () {
 
-		var time = performance.now(),
-			delta = ( time - prevTime ) / 1000;
+            return yawObject;
 
-			velocity.x -= velocity.x * 10.0 * delta;
-			velocity.z -= velocity.z * 10.0 * delta;
-			velocity.y -= 9.8 * 100.0 * delta; 
+        };
 
-		if ( moveForward && this.canMoveForward === true ) {
-			velocity.z -= ( 400.0 * this.speedMod.z ) * delta;
-		}
+        this.isOnObject = function ( boolean ) {
 
-		if ( moveBackward) {
-			velocity.z += ( 400.0 * this.speedMod.z ) *  delta;
-		}
+            isOnObject = boolean;
+            canJump = boolean;
 
-		if ( moveLeft ){
-			velocity.x -= ( 400.0 * this.speedMod.x ) * delta;
-		}
+        };
 
-		if ( moveRight ){
-			velocity.x += ( 400.0 * this.speedMod.x ) * delta;
-		}
+        this.getDirection = function() {
 
-		if ( isOnObject === true ) {
-			velocity.y = Math.max( 0, velocity.y );
-		}
+            // assumes the camera itself is not rotated
 
-		yawObject.translateX( velocity.x * delta );
-		yawObject.translateY( velocity.y * delta ); 
-		yawObject.translateZ( velocity.z * delta );
+            var direction = new THREE.Vector3( 0, 0, -1 );
+            var rotation = new THREE.Euler( 0, 0, 0, "YXZ" );
 
-		if ( yawObject.position.y < 10 ) {
-			velocity.y = 0;
-			yawObject.position.y = 10;
-			canJump = true;
-		}
+            return function( v ) {
 
-		prevTime = time;
+                rotation.set( pitchObject.rotation.x, yawObject.rotation.y, 0 );
 
-	};
+                v.copy( direction ).applyEuler( rotation );
 
-};
+                return v;
+
+            }
+
+        }();
+
+        this.update = function () {
+
+            if ( scope.enabled === false ){
+                return;	
+            } 
+
+            var time = performance.now(),
+                delta = ( time - prevTime ) / 1000;
+
+                velocity.x -= velocity.x * 10.0 * delta;
+                velocity.z -= velocity.z * 10.0 * delta;
+                velocity.y -= 9.8 * 100.0 * delta; 
+
+            if ( moveForward && this.canMoveForward === true ) {
+                velocity.z -= ( 400.0 * this.speedMod.z ) * delta;
+            }
+
+            if ( moveBackward) {
+                velocity.z += ( 400.0 * this.speedMod.z ) *  delta;
+            }
+
+            if ( moveLeft ){
+                velocity.x -= ( 400.0 * this.speedMod.x ) * delta;
+            }
+
+            if ( moveRight ){
+                velocity.x += ( 400.0 * this.speedMod.x ) * delta;
+            }
+
+            if ( isOnObject === true ) {
+                velocity.y = Math.max( 0, velocity.y );
+            }
+
+            yawObject.translateX( velocity.x * delta );
+            yawObject.translateY( velocity.y * delta ); 
+            yawObject.translateZ( velocity.z * delta );
+
+            if ( yawObject.position.y < 10 ) {
+                velocity.y = 0;
+                yawObject.position.y = 10;
+                canJump = true;
+            }
+
+            prevTime = time;
+
+        };
+
+    };
+
+});
