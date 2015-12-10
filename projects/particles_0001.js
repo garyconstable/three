@@ -15,14 +15,21 @@
     
         console.log('---> Particles App');
 
+        var client = {
+            x: 0,
+            y: 0,
+        }
     
-    
-        var mouseVector = new THREE.Vector3(100,100,0);
+        var mouseVector = new THREE.Vector3(0,0,0);
+        
         var onMouseMove = function(e){        
-            //mouseVector = functions.mousePosition3D(e.clientX, e.clientY, 0, App);
-            console.log(mouseVector)    
+            //            mouseVector = functions.mousePosition3D(e.clientX, e.clientY, 0, App);
+            //            console.log(mouseVector)    
+            //            mouseVector = new THREE.Vector3(100,100,0);
             
-            mouseVector = new THREE.Vector3(100,100,0);
+            client.x = e.clientX;
+            client.y = e.clientY;
+            
         };
         document.addEventListener('click', onMouseMove, false);
     
@@ -163,17 +170,22 @@
             return this;
         };
         
+        
+        
         //renderer
         app.prototype.render = function(mousePos){ 
-            
-            var _this = this;
 
+            var _this = this;
+                
             //move the particles
             for( var i = 0; i < _this.pool.length; i++ )
             {    
                 //direction is the mouse pos
-                var dir =  mousePos;
-                var dir = new THREE.Vector3(100,-100,0);
+                //                var dir =  mousePos;
+                //                mouseVector = functions.mousePosition3D(client.x, client.y, 0, App);     
+                //                var dir = new THREE.Vector3(mouseVector.x,mouseVector.y,-500)
+                
+                var dir =  functions.mousePosition2D(client.x, client.y, 350, 350);
             
                 //dircetion
                 dir.sub( _this.pool[i].position).normalize().multiplyScalar(0.10);
@@ -192,9 +204,9 @@
             _this.geometry.verticesNeedUpdate = true;
             _this.geometry.colorsNeedsUpdate = true; 
 
-//            var timer = 0.0001 * Date.now();
-//            this.camera.position.x = Math.cos( timer ) * 1000;
-//            this.camera.position.z = Math.sin( timer ) * 1000;
+                        var timer = 0.0001 * Date.now();
+                        this.camera.position.x = Math.cos( timer ) * 1000;
+                        this.camera.position.z = Math.sin( timer ) * 1000;
             this.camera.lookAt( this.scene.position );
         };
         

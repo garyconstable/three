@@ -9,11 +9,21 @@ var projects = {
     particles       : ['particles'],
     particles_0001  : ['particles_0001'],
     maze            : ['maze'],
+    shader_0001     : ['shader_0001'],
 };
 
+var get = function(name){
+   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+      return decodeURIComponent(name[1]);
+}
 
-//loadApplication is a tag in the HTML template
-window.project = projects[window.loadApplication];
+
+var appName = get('app');
+if(typeof appName !== 'undefined'){
+    window.project = projects[appName];
+}else{
+    window.project = projects[window.loadApplication];
+}
 
 
 //define all the files we may need to load
@@ -67,7 +77,8 @@ require.config({
         grid                    : '/projects/grid',
         maze                    : '/projects/maze',
         particles               : '/projects/particles',
-        particles_0001          : '/projects/particles_0001'
+        particles_0001          : '/projects/particles_0001',
+        shader_0001             : '/projects/shader_0001'
     },
     shim: {
         three: {
@@ -80,6 +91,8 @@ require.config({
     ]
     
 });
+
+
 
 
 //load the main app file
