@@ -162,6 +162,40 @@
             ].join('\n');
             
             
+            
+            
+            var phongVertex = [
+                "varying vec3 vector_Normal;",
+                'attribute vec3 position;',
+                'uniform projectionMatrix;',
+                'uniform modelviewMatrix;',
+                "void main()",
+                "{",
+                    "gl_Position = projectionMatrix * modelviewMatrix * vec4(position, 1.0);",
+                    "gl_TexCoord[0] = gl_MultiTexCoord0;",
+                    "vector_Normal = gl_NormalMatrix * gl_Normal;",
+                "}",
+            ].join('\n');
+            
+            
+            var phongFragment = [
+                 " varying vec3 vector_Normal;",
+                 " uniform vec3 color;",
+                 " uniform sampler2D tex;",
+                 " void main()",
+                 " { ",
+                     " vec3 c = texture2D(tex,gl_TexCoord[0].st).rgb;",
+                     " vec3 N = normalize(vector_Normal); ",
+                     " vec3 L = normalize(gl_LightSource[0].position.xyz); ",
+                     " vec3 H = normalize(gl_LightSource[0].halfVector.xyz); ",
+                     " vec3 ambient =  gl_FrontMaterial.ambient * gl_LightSource[0].ambient;",
+                     " vec3 diffuse =  max(dot(L, N), 0.0) *  gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;",
+                     " vec3 specular = vec3(1.0, 1.0, 1.0) * pow(max(dot(H, N), 0.0), 16.0) * gl_LightSource[0].specular * gl_FrontMaterial.specular * gl_FrontMaterial.shininess;",
+                     " gl_FragColor = vec4(ambient + diffuse + specular, 1.0); ",
+                "}",
+             ].join('\n');
+            
+            
             //set the caler 100 back from zeo
             this.camera.position.set( 0, 0, 100 );
             
@@ -188,6 +222,8 @@
             var shaderMaterial = new THREE.ShaderMaterial({
                 vertexShader:   vertexShader,
                 fragmentShader: fragmentShader
+                //vertexShader:   phongVertex,
+                //fragmentShader: phongFragment
             });
             var geometry = new THREE.SphereGeometry( 3, 16, 16 );
             //var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );

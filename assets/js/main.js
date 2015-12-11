@@ -71,6 +71,9 @@ require.config({
         //players
         playerOne               : '/assets/js/players/player-0001',
         
+        //shaders
+        ShaderLib               : '/assets/js/shaders/ShaderLib',
+        
         //vendor
         firebase                : '/assets/js/vendor/firebase.2.2.7',
         jquery                  : '/assets/bower_components/jquery/dist/jquery.min',
