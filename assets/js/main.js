@@ -9,8 +9,10 @@ var projects = {
     particles       : ['particles'],
     particles_0001  : ['particles_0001'],
     maze            : ['maze'],
+    maze2           : ['maze2'],
     shader_0001     : ['shader_0001'],
     shader_0002     : ['shader_0002'],
+    voxels          : ['voxels'],
 };
 
 var get = function(name){
@@ -23,7 +25,7 @@ if(typeof appName !== 'undefined'){
     window.project = projects[appName];
 }else{
     //window.project = projects[window.loadApplication];
-    window.project = projects.shader_0002;
+    window.project = projects.maze2;
 }
 
 //loadApplication is a tag in the HTML template
@@ -82,10 +84,12 @@ require.config({
         //projects
         grid                    : '/projects/grid',
         maze                    : '/projects/maze',
+        maze2                    : '/projects/maze2',
         particles               : '/projects/particles',
         particles_0001          : '/projects/particles_0001',
         shader_0001             : '/projects/shader_0001',
-        shader_0002             : '/projects/shader_0002'
+        shader_0002             : '/projects/shader_0002',
+        voxels                  : '/projects/voxels'
     },
     shim: {
         three: {

@@ -30,7 +30,8 @@
         var App = App || {};
         window.App = App;
         
-        console.log('---> Welcome to 3d Worlds by <garyconstable80@gmail.com>');
+        console.log('---> Welcome to 3d Worlds.');
+        console.log('---> garyconstable80@gmail.com')
         console.log('---> AppBase');
         return app;
     });

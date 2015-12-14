@@ -47,11 +47,6 @@
             this.camera.position.set( 0, 200, 800 );
         };
 
-        //ambient light
-        app.prototype.addAmbientLight = function(){
-            this.scene.add( new THREE.AmbientLight( 0x111111 ) );
-        };
-
         //dom events
         app.prototype.events = function(){
             window.onresize = function(event) {
@@ -89,7 +84,7 @@
 
         //renderer
         app.prototype.render = function(){ 
-            this.sceneObjects.centerPoint.rotation.z += 0.01;
+            //this.sceneObjects.centerPoint.rotation.z += 0.01;
             this.controls.update(); // required if controls.enableDamping = true, or if controls.autoRotate = true
             this.renderer.render( this.scene, this.camera ); 
         };
@@ -114,7 +109,6 @@
             this.createRenderer();
             this.createScene();
             this.addCamera();
-            //this.addAmbientLight();
             this.loadGrid();
             this.addControls();
             this.sceneObjects = {};
@@ -164,37 +158,61 @@
             
             
             
-            var phongVertex = [
-                "varying vec3 vector_Normal;",
-                'attribute vec3 position;',
-                'uniform projectionMatrix;',
-                'uniform modelviewMatrix;',
-                "void main()",
-                "{",
-                    "gl_Position = projectionMatrix * modelviewMatrix * vec4(position, 1.0);",
-                    "gl_TexCoord[0] = gl_MultiTexCoord0;",
-                    "vector_Normal = gl_NormalMatrix * gl_Normal;",
+          
+            
+            
+            
+            var blinn_phong_vs = [
+                "attribute vec3 aVertexPosition;",
+                "attribute vec3 aVertexNormal;",
+                "uniform mat4 mVMatrix;",
+                "uniform mat4 pMatrix;",
+                "uniform mat4 nMatrix;",
+                "varying vec3 transformedNormal;",
+                "varying vec3 vertexPos;",
+                "void main(void) {",
+                "    vec4 vertexPos4 =  mVMatrix * vec4(aVertexPosition, 1.0);",
+                "    vertexPos = vertexPos4.xyz;",
+                "    transformedNormal = vec3(nMatrix * vec4(aVertexNormal,1.0));",
+                "    gl_Position= pMatrix *vertexPos4;",
                 "}",
-            ].join('\n');
-            
-            
-            var phongFragment = [
-                 " varying vec3 vector_Normal;",
-                 " uniform vec3 color;",
-                 " uniform sampler2D tex;",
-                 " void main()",
-                 " { ",
-                     " vec3 c = texture2D(tex,gl_TexCoord[0].st).rgb;",
-                     " vec3 N = normalize(vector_Normal); ",
-                     " vec3 L = normalize(gl_LightSource[0].position.xyz); ",
-                     " vec3 H = normalize(gl_LightSource[0].halfVector.xyz); ",
-                     " vec3 ambient =  gl_FrontMaterial.ambient * gl_LightSource[0].ambient;",
-                     " vec3 diffuse =  max(dot(L, N), 0.0) *  gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse;",
-                     " vec3 specular = vec3(1.0, 1.0, 1.0) * pow(max(dot(H, N), 0.0), 16.0) * gl_LightSource[0].specular * gl_FrontMaterial.specular * gl_FrontMaterial.shininess;",
-                     " gl_FragColor = vec4(ambient + diffuse + specular, 1.0); ",
+            ].join("\n");
+
+
+            var blinn_phong_fs = [
+                "precision mediump float;",
+                "varying vec3 transformedNormal;",
+                "varying vec3 vertexPos;",
+                "uniform vec3 uAmbientColor;",
+                "uniform vec3 uLightingPosition;",
+                "uniform vec3 uDirectionalColor;",
+                "uniform vec3 uSpecularColor;",
+                "uniform vec3 materialDiffuseColor;",
+                "uniform vec3 materialAmbientColor;",
+                "uniform vec3 materialSpecularColor;",
+                "void main(void)  {",
+                "    vec3 normal=normalize(transformedNormal);",
+                "    vec3 eyeVector=normalize(-vertexPos);",
+                "    vec3 lightDirection = normalize(uLightingPosition);",
+                "    float specular = 0.0;",
+                "    float directionalLightWeighting = max(dot(normal, - lightDirection), 0.0);",
+                "    if(directionalLightWeighting>0.0)",
+                "    {",
+                "        vec3 halfDir = normalize(-lightDirection + eyeVector);",
+                "        float specAngle = max(dot(halfDir, normal), 0.0);",
+                "        specular = pow(specAngle, 4.0);",
+                "    }",
+                "    vec3 iColor = uAmbientColor*materialAmbientColor+",
+                "    uDirectionalColor *materialDiffuseColor *",
+                "    directionalLightWeighting+uSpecularColor*",
+                "    materialSpecularColor*specular;",
+                "    gl_FragColor = vec4(iColor, 1.0);",
                 "}",
-             ].join('\n');
+            ].join("\n");
+
+
             
+
             
             //set the caler 100 back from zeo
             this.camera.position.set( 0, 0, 100 );
@@ -208,15 +226,33 @@
             //planet
             var geometry = new THREE.SphereGeometry( 5, 32, 32 );
             var shaderMaterial = new THREE.ShaderMaterial({
-                vertexShader:   vertexShader,
-                fragmentShader: fragmentShader
+                vertexShader:   blinn_phong_vs,
+                fragmentShader: blinn_phong_fs
             });
-            var sphere = new THREE.Mesh( geometry, shaderMaterial );
+
+
+            var material = new THREE.RawShaderMaterial({
+                // uniforms: {
+                //     time: { type: "f", value: 1.0 }
+                // },
+                vertexShader: blinn_phong_vs,
+                fragmentShader: blinn_phong_fs,
+                side: THREE.DoubleSide,
+                transparent: true
+            });
+
+
+
+            var sphere = new THREE.Mesh( geometry, material );
             sphere.position.x = 0;
             sphere.position.y = 0;
             sphere.position.z = 0;
             this.scene.add(sphere);
             
+
+
+
+
             
             //satellite
             var shaderMaterial = new THREE.ShaderMaterial({
@@ -226,7 +262,6 @@
                 //fragmentShader: phongFragment
             });
             var geometry = new THREE.SphereGeometry( 3, 16, 16 );
-            //var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
             var satellite = new THREE.Mesh( geometry,  shaderMaterial );
             satellite.position.x = 20;
             satellite.position.y = 20;
@@ -234,18 +269,17 @@
             this.sceneObjects.centerPoint.add( satellite ); 
             
             
-            // add the pointlight
-            var pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
-            pointLight.position.set( -20, -20, 0 );
-            this.sceneObjects.centerPoint.add( pointLight );
+        
 
-            var sphereSize = 1;
-            var pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-            this.sceneObjects.centerPoint.add( pointLightHelper );
-            
-            
-            
+
+
+
+
+        
+
+
            
+
             
             
             
