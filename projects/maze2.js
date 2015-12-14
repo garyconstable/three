@@ -25,8 +25,8 @@
         app.prototype.createRenderer = function(){
             this.renderer = new THREE.WebGLRenderer({antialias:true});
             this.renderer.setSize(this.width, this.height);
-            // this.renderer.shadowMapEnabled.enabled = true;
-            // this.renderer.shadowMapSoft = true;
+            this.renderer.shadowMapEnabled.enabled = true;
+            this.renderer.shadowMapSoft = true;
             document.body.appendChild(this.renderer.domElement);
         };
 
@@ -34,7 +34,7 @@
         app.prototype.createScene = function(){
             this.scene = new THREE.Scene();
             this.scene.fog = new THREE.Fog( 0x888888, 1500, 4000 );
-        }
+        };
 
         //add camera
         app.prototype.addCamera = function(){
@@ -64,7 +64,7 @@
             _this.controls.speedMod = {
                 x: 4,
                 y: 0.5,
-                z: 5,
+                z: 10,
                 j: 10
             };
             _this.pointerlockInit();
@@ -116,7 +116,7 @@
                     _this.scene.add(mesh);
                     break;
             }
-        }
+        };
 
         //load map
         app.prototype.loadMap = function() {
@@ -133,17 +133,61 @@
                 newMap.push(str);
             }
 
-            var HORIZONTAL_UNIT = 100, 
+            var HORIZONTAL_UNIT = 250, 
                 VERTICAL_UNIT = 500, 
-                ZSIZE = newMap.length * HORIZONTAL_UNIT, XSIZE = newMap[0].length * HORIZONTAL_UNIT;
+                ZSIZE = newMap.length * HORIZONTAL_UNIT, 
+                XSIZE = newMap[0].length * HORIZONTAL_UNIT;
 
             for (var i = 0, rows = newMap.length; i < rows; i++) {
                 for (var j = 0, cols = newMap[i].length; j < cols; j++) {
                     _this.addVoxel(newMap[i].charAt(j), i, j, HORIZONTAL_UNIT, VERTICAL_UNIT, ZSIZE, XSIZE);
                 }
             }
+            
+            
+            console.log(ZSIZE, XSIZE)
+            
+            
+         
+            var planeW = 50; // pixels
+            var planeH = 50; // pixels 
+            var numW = 50; // how many wide (50*50 = 2500 pixels wide)
+            var numH = 50; // how many tall (50*50 = 2500 pixels tall)
+            var plane = new THREE.Mesh(
+                new THREE.PlaneGeometry( ZSIZE, XSIZE, planeW, planeH ),
+                new THREE.MeshBasicMaterial( {
+                    color: 0xFFFFFF,
+                    wireframe: true
+                })
+            );
+            
+            plane.position.y = -100;
+            plane.rotation.x +=  ( 90 * (Math.PI/180) );
+            
+            this.scene.add(plane);
+            
+            
+//            var line_material = new THREE.LineBasicMaterial( { color: 0x303030 } ),
+//                geometry = new THREE.Geometry(),
+//                floor = -75, 
+//                step = 25;
+//        
+//            for ( var i = 0; i <= 40; i ++ ) {
+//                geometry.vertices.push( new THREE.Vector3( - 500, floor, i * step - 500 ) );
+//                geometry.vertices.push( new THREE.Vector3(   500, floor, i * step - 500 ) );
+//                geometry.vertices.push( new THREE.Vector3( i * step - 500, floor, -500 ) );
+//                geometry.vertices.push( new THREE.Vector3( i * step - 500, floor,  500 ) );
+//            }
+//            
+//            var line = new THREE.Line( geometry, line_material, THREE.LineSegments );
+//            
+//            this.scene.add( line );
+            
+            
+            
+            
 
-            var flashlight = new THREE.SpotLight(0xffffff, 1.15, 450);
+            var flashlight = new THREE.SpotLight(0xffffff, 1.3, 500);
             this.camera.add(flashlight);
             flashlight.position.set(0,0,1);
             flashlight.target = this.camera;

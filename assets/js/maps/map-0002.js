@@ -47,7 +47,7 @@
             var x = this.width;
             var y = this.depth;
 
-            var n=x*y-1;
+            var n = x * y-1;
 
             if (n<0) {
                 console.log("illegal maze dimensions");
@@ -85,7 +85,7 @@
                 unvisited[j] = [];
 
                 for (var k= 0; k<y+1; k++){
-                    unvisited[j].push(j>0 && j<x+1 && k>0 && (j != here[0]+1 || k != here[1]+1));
+                    unvisited[j].push(j>0 && j<x+1 && k>0 && (j !== here[0]+1 || k !== here[1]+1));
                 }
             }
 
@@ -111,7 +111,7 @@
 
                     unvisited[next[0]+1][next[1]+1]= false;
 
-                    if (next[0] == here[0]){
+                    if (next[0] === here[0]){
 
                         horiz[next[0]][(next[1]+here[1]-1)/2]= true;
 
@@ -129,8 +129,13 @@
                 }
             }
 
-            return {x: x, y: y, horiz: horiz, verti: verti};
-
+            return  {
+                x: x, 
+                y: y, 
+                horiz: horiz, 
+                verti: verti
+            };
+           
         };
 
         //draw map
