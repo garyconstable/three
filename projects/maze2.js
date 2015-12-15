@@ -12,13 +12,13 @@
         //app / level / scene settings
         app.prototype.settings = function(){
             
-            this.Map = new map( 3, this, 500, 500 );
+            this.Map = new map( 10, this, 500, 500 );
 
             this.settings = {
 
                 lights: {
                     ambient: {
-                        color:  0x333333
+                        color:  0x222222
                     }
                 }, 
 
@@ -51,7 +51,7 @@
         app.prototype.loadMap = function() {
             this.Map.loadMap();
             this.Map.loadFloor(0x8C4D38 );
-            var flashlight = new THREE.SpotLight(0xffffff, 1.5, 1000);
+            var flashlight = new THREE.SpotLight(0xffffff, 1.0, 1000);
             this.camera.add(flashlight);
             flashlight.position.set(0,0,1);
             flashlight.target = this.camera;
