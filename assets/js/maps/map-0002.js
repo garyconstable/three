@@ -8,37 +8,12 @@
 
         //map definition
         var map = function(App){
-
             this.startPosition = null,
             this.units = 1,
-            this.width = 10,
-            this.depth = 10,
-            // this.wallHeight = 1200;
-            // this.unitSize = 700;
-
+            this.width = 4,
+            this.depth = this.width,
             this.cols = 0;
             this.rows = 0;
-
-
-            // this.cube = new THREE.BoxGeometry(this.unitSize, this.wallHeight, this.unitSize);
-
-            // this.texture_1 = THREE.TextureLoader('/assets/img/doom2-plut/a-brick1.png');
-            // //this.texture_1.wrapS = THREE.RepeatWrapping;
-
-            // this.texture_2 = THREE.TextureLoader('/assets/img/doom2-plut/a-dbri1.png');
-            // //this.texture_2.wrapS = THREE.RepeatWrapping;
-
-            // this.materials = [
-
-            //     new THREE.MeshLambertMaterial({
-            //         //map: this.texture_1,
-            //         //side:  THREE.DoubleSide	
-            //     }),
-            //     new THREE.MeshLambertMaterial({
-            //         //map: this.texture_2,
-            //         //side:  THREE.DoubleSide	
-            //     }),
-            //  ];
         };
 
         //create maze

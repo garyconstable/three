@@ -62,6 +62,7 @@ require.config({
         //maps
         mapOne                  : '/assets/js/maps/map-0001',
         mapTwo                  : '/assets/js/maps/map-0002',
+        mapThree                : '/assets/js/maps/map-0003',
         
         //models
         teapot                  : '/assets/js/models/teapot.js',
