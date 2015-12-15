@@ -15,6 +15,7 @@
 
             this.zSize = this.getMapLength() * this.horizontalUnit;
             this.xSize  = this.map[0].length * this.horizontalUnit;
+            this.voxelCount = 0;
             
             this.app = app;
         };
@@ -250,6 +251,7 @@
             var _this = this;
             var z = (row+1) * _this.horizontalUnit - this.zSize * 0.5;
             var x = (col+1) * _this.horizontalUnit - this.xSize * 0.5;
+            var voxelCount = 0;
             
             switch(type) {
                 case ' ': break;
@@ -275,8 +277,11 @@
                     mesh.castShadow = true;
                     mesh.receiveShadow = false;
                     _this.app.scene.add(mesh);
+                    _this.voxelCount++;
                     break;
             }
+            
+           
         };
 
         // load the map to the scene
@@ -301,6 +306,9 @@
                     _this.addVoxel(newMap[i].charAt(j), i, j);
                 }
             }
+            
+             console.log( 'Voxels', _this.voxelCount);
+             
         }
 
         //return the map for require.js

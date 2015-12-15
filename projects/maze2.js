@@ -18,7 +18,10 @@
                 
                 scene: {
                    fog: {
-                       color: 0x23292B
+                       //color: 0x23292B,
+                       color: 0x111111,
+                       near: 1500,
+                       far: 2500
                    } 
                 }, 
                 
@@ -70,7 +73,11 @@
             this.events();
             this.init();
             this.createRenderer();
-            this.createScene( this.settings.scene.fog.color );
+            this.createScene( 
+                this.settings.scene.fog.color,
+                this.settings.scene.fog.near,
+                this.settings.scene.fog.far
+            );
             this.addCamera();
             this.addAmbientLight( this.settings.lights.ambient.color );
             this.loadMap();
