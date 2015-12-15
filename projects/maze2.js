@@ -12,13 +12,22 @@
         //app / level / scene settings
         app.prototype.settings = function(){
             
-            this.Map = new map( 10, this, 500, 500 );
+            this.Map = new map( 15, this, 500, 400 );
 
             this.settings = {
-
+                
+                scene: {
+                   fog: {
+                       //color: 0x23292B,
+                       color: 0x111111,
+                       near: 1500,
+                       far: 2500
+                   } 
+                }, 
+                
                 lights: {
                     ambient: {
-                        color:  0x222222
+                        color:  0x111111
                     }
                 }, 
 
@@ -31,7 +40,7 @@
                     }
                 }            
             };
-        }
+        };
 
         //add controls
         app.prototype.addControls = function(){
@@ -51,11 +60,12 @@
         app.prototype.loadMap = function() {
             this.Map.loadMap();
             this.Map.loadFloor(0x8C4D38 );
-            var flashlight = new THREE.SpotLight(0xffffff, 1.0, 1000);
+            this.Map.loadRoof(0x8C4D38 );
+            var flashlight = new THREE.SpotLight(0xffffff, 1.5, 1000);
             this.camera.add(flashlight);
             flashlight.position.set(0,0,1);
             flashlight.target = this.camera;
-        }
+        };
 
         //create the game
         app.prototype.createGame = function(){
@@ -63,14 +73,18 @@
             this.events();
             this.init();
             this.createRenderer();
-            this.createScene();
+            this.createScene( 
+                this.settings.scene.fog.color,
+                this.settings.scene.fog.near,
+                this.settings.scene.fog.far
+            );
             this.addCamera();
             this.addAmbientLight( this.settings.lights.ambient.color );
             this.loadMap();
             this.addControls();
             this.renderer.shadowMapEnabled.enabled = true;
             this.renderer.shadowMapSoft = true;
-        }
+        };
 
         //animate
         app.prototype.animate = function(){

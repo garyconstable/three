@@ -41,9 +41,18 @@
         };
 
         //create the scene
-        app.prototype.createScene = function(){
+        app.prototype.createScene = function(color, near, far){
+            if(typeof color === 'undefined' || !color ){
+                color = 0x888888;
+            }
+            if(typeof near === 'undefined' || !near ){
+                near = 1500;
+            }
+            if(typeof far === 'undefined' || !far ){
+                far = 4000;
+            }
             this.scene = new THREE.Scene();
-            this.scene.fog = new THREE.Fog( 0x888888, 1500, 4000 );
+            this.scene.fog = new THREE.Fog( color, near, far );
         };
 
         //add camera
@@ -72,6 +81,7 @@
         window.App = App;
         
         console.log('---> Welcome to 3d Worlds.');
+        console.log('---> mailto:')
         console.log('---> garyconstable80@gmail.com')
         console.log('---> AppBase');
         return app;

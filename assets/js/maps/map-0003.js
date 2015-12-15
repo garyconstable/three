@@ -15,6 +15,7 @@
 
             this.zSize = this.getMapLength() * this.horizontalUnit;
             this.xSize  = this.map[0].length * this.horizontalUnit;
+            this.voxelCount = 0;
             
             this.app = app;
         };
@@ -22,7 +23,7 @@
         //length of map (array length)
         map.prototype.getMapLength = function(){
             return this.map.length;
-        }
+        };
 
         //create maze
         map.prototype.createMaze = function() {
@@ -219,6 +220,30 @@
             plane.position.z += this.horizontalUnit / 2;            
             this.app.scene.add(plane);
         }
+        
+        
+        //load the floor (same size as map)
+        map.prototype.loadRoof = function(color){
+            if( typeof color === 'undefined' || !color ){
+                color = 0x729BA8;
+            }
+            var plane = new THREE.Mesh(
+                new THREE.PlaneGeometry( this.zSize, this.xSize, 50, 50 ),
+                new THREE.MeshPhongMaterial({
+                    color: color,
+                    side: THREE.DoubleSide
+                })
+            );
+            plane.castShadow = false;
+            plane.receiveShadow = true;
+            plane.rotation.x +=  ( 90 * (Math.PI/180) );
+            plane.rotation.z +=  ( 90 * (Math.PI/180) );
+            plane.position.x += this.horizontalUnit / 2;
+            plane.position.y += this.verticalUnit;
+            plane.position.z += this.horizontalUnit / 2;            
+            this.app.scene.add(plane);
+        }
+
 
         //add voxel
         map.prototype.addVoxel = function(type, row, col) {
@@ -226,12 +251,14 @@
             var _this = this;
             var z = (row+1) * _this.horizontalUnit - this.zSize * 0.5;
             var x = (col+1) * _this.horizontalUnit - this.xSize * 0.5;
+            var voxelCount = 0;
             
             switch(type) {
                 case ' ': break;
                 case 'S':
                     //spawnPoints.push(new THREE.Vector3(x, 0, z));
                     break;
+                case '|':
                 case '+':
                 case '-':
                     
@@ -250,8 +277,11 @@
                     mesh.castShadow = true;
                     mesh.receiveShadow = false;
                     _this.app.scene.add(mesh);
+                    _this.voxelCount++;
                     break;
             }
+            
+           
         };
 
         // load the map to the scene
@@ -276,6 +306,9 @@
                     _this.addVoxel(newMap[i].charAt(j), i, j);
                 }
             }
+            
+             console.log( 'Voxels', _this.voxelCount);
+             
         }
 
         //return the map for require.js
