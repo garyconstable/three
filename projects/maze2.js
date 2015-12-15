@@ -12,7 +12,7 @@
         //app / level / scene settings
         app.prototype.settings = function(){
             
-            this.Map = new map( 15, this, 500, 500 );
+            this.Map = new map( 15, this, 500, 400 );
 
             this.settings = {
                 
