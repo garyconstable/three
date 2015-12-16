@@ -63,11 +63,13 @@
         //dom events
         app.prototype.events = function(){
             window.onresize = function(event) {
-                App.width = window.innerWidth;  
-                App.height = window.innerHeight;
-                App.renderer.setSize(App.width, App.height);
-                App.camera.aspect = App.width / App.height;
-                App.camera.updateProjectionMatrix();
+                if(typeof App !== "undefined" && typeof App.renderer !== "undefined"){
+                    App.width = window.innerWidth;  
+                    App.height = window.innerHeight;
+                    App.renderer.setSize(App.width, App.height);
+                    App.camera.aspect = App.width / App.height;
+                    App.camera.updateProjectionMatrix();
+                }
             };
         };
 

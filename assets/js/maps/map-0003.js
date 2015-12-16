@@ -9,7 +9,19 @@
         var map = function( mapSize, app, HORIZONTAL_UNIT, VERTICAL_UNIT ){    
             this.width = mapSize;
             this.depth = this.width;
-            this.map = this.createMaze();
+
+
+            if(this.width === 0){
+                this.map = [
+                    ['+', '-', '-', '-', '+'],
+                    ['|', ' ', ' ', ' ', 'x'],
+                    ['+', '-', '-', '-', '+'],
+                ];
+            }else{
+                this.map = this.createMaze();
+            }
+
+            
             this.horizontalUnit = HORIZONTAL_UNIT;
             this.verticalUnit = VERTICAL_UNIT;
 
@@ -22,7 +34,7 @@
 
         //length of map (array length)
         map.prototype.getMapLength = function(){
-            return this.map.length;
+            return typeof (this.map) !== "undefined" ? this.map.length : 0;
         };
 
         //create maze
@@ -109,12 +121,14 @@
                 }
             }
 
-            return _this.drawMap({
+            var m = _this.drawMap({
                 x: x, 
                 y: y, 
                 horiz: horiz, 
                 verti: verti
             });
+
+            return _this.addLights(m);
            
         };
 
@@ -199,6 +213,35 @@
             return rows;
         };
 
+
+
+
+        map.prototype.addLights = function(mapArray){
+
+            for(var x=0; x<mapArray.length; x++){
+                
+                for(var y=0; y<mapArray[x].length; y++){
+
+                    
+                    var item = mapArray[x][y];
+                    
+                    if( item === '+'){
+
+                        mapArray[x][y] = 'x';
+
+                    }
+
+                }
+
+                console.log(mapArray[x].join(' '))
+
+            }
+
+            return mapArray;
+        }
+
+
+
         //load the floor (same size as map)
         map.prototype.loadFloor = function(color){
             if( typeof color === 'undefined' || !color ){
@@ -245,14 +288,56 @@
         }
 
 
-        //add voxel
-        map.prototype.addVoxel = function(type, row, col) {
-
+        map.prototype.addWall = function(type, row, col){
             var _this = this;
             var z = (row+1) * _this.horizontalUnit - this.zSize * 0.5;
             var x = (col+1) * _this.horizontalUnit - this.xSize * 0.5;
-            var voxelCount = 0;
+
+            var geo = new THREE.CubeGeometry(
+                _this.horizontalUnit,
+                _this.verticalUnit, 
+                _this.horizontalUnit
+            );
+                    
+            var material = new THREE.MeshPhongMaterial({
+                color: 0x729BA8
+            });
+
+            var mesh = new THREE.Mesh(geo, material);
+            mesh.position.set(x, (_this.verticalUnit * 0.5 - 100), z);
+            mesh.castShadow = true;
+            mesh.receiveShadow = false;
+            _this.app.scene.add(mesh);
+            _this.voxelCount++;
+        }
+
+        map.prototype.addWallLight = function(type, row, col){
             
+            var _this = this;
+            var z = (row+1) * _this.horizontalUnit - this.zSize * 0.5;
+            var x = (col+1) * _this.horizontalUnit - this.xSize * 0.5;
+
+            var spotLight = new THREE.SpotLight(0xffffff, 100, 400);
+            spotLight.position.set(x, (_this.verticalUnit * 0.5 - 100), z);
+
+            var spotTarget = new THREE.Object3D();
+            spotTarget.position.set(0, 0, 0);
+            spotLight.target = spotTarget;
+
+            _this.app.scene.add(spotLight);
+            _this.app.scene.add(new THREE.PointLightHelper(spotLight, 1));
+
+            // var greenPoint = new THREE.PointLight(0x33ff00, 1, 150);
+            // greenPoint.position.set( -70, 5, 70 );
+            // this.scene.add(greenPoint);
+            // this.scene.add(new THREE.PointLightHelper(greenPoint, 3));
+
+            //_this.voxelCount++;
+        }
+
+        //add voxel
+        map.prototype.addVoxel = function(type, row, col) {
+            var _this = this;
             switch(type) {
                 case ' ': break;
                 case 'S':
@@ -261,27 +346,14 @@
                 case '|':
                 case '+':
                 case '-':
-                    
-                    var geo = new THREE.CubeGeometry(
-                        _this.horizontalUnit,
-                        _this.verticalUnit, 
-                        _this.horizontalUnit
-                    );
-                    
-                    var material = new THREE.MeshPhongMaterial({
-                        color: 0x729BA8
-                    });
+                    _this.addWall(type, row, col);
+                    break;
 
-                    var mesh = new THREE.Mesh(geo, material);
-                    mesh.position.set(x, (_this.verticalUnit * 0.5 - 100), z);
-                    mesh.castShadow = true;
-                    mesh.receiveShadow = false;
-                    _this.app.scene.add(mesh);
-                    _this.voxelCount++;
+                case 'x':
+                    _this.addWall(type, row, col);
+                    _this.addWallLight(type, row, col);    
                     break;
             }
-            
-           
         };
 
         // load the map to the scene
