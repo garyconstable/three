@@ -10,7 +10,7 @@
      * @author mrdoob / http://mrdoob.com/
      */
 
-    THREE.PointerLockControls = function ( camera, App ) {
+    THREE.PointerLockControls = function ( camera ) {
 
         var scope = this;
             camera.rotation.set( 0, 0, 0 );
@@ -19,6 +19,13 @@
             pitchObject.add( camera ),
             yawObject = new THREE.Object3D();
             yawObject.position.y = 10;
+
+
+            //yawObject.position.set(-750, 0, 1250 );
+            //camera.rotation.y = 90 * Math.PI / 180
+            //pitchObject.rotation.y += ( 90 * (Math.PI/180) ); ;
+            // pitchObject.rotation.x += ( 90 * (Math.PI/180) ); 
+
             yawObject.add( pitchObject ),
             moveForward = false,
             moveBackward = false,
@@ -40,13 +47,12 @@
             this.canMoveForward = true;	
 
 
-
         var onMouseMove = function ( event ) {
 
             if ( scope.enabled === false ) return;
 
-            var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-            var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+            var movementX = event.movementX || event.mozMovementX || event.movementX || 0;
+            var movementY = event.movementY || event.mozMovementY || event.movementY || 0;
 
             yawObject.rotation.y -= movementX * 0.002;
             pitchObject.rotation.x -= movementY * 0.002;
@@ -127,43 +133,29 @@
         this.enabled = false;
 
         this.getObject = function () {
-
             return yawObject;
-
         };
 
         this.isOnObject = function ( boolean ) {
-
             isOnObject = boolean;
             canJump = boolean;
-
         };
 
         this.getDirection = function() {
-
             // assumes the camera itself is not rotated
-
             var direction = new THREE.Vector3( 0, 0, -1 );
             var rotation = new THREE.Euler( 0, 0, 0, "YXZ" );
-
             return function( v ) {
-
                 rotation.set( pitchObject.rotation.x, yawObject.rotation.y, 0 );
-
                 v.copy( direction ).applyEuler( rotation );
-
                 return v;
-
             }
-
         }();
 
         this.update = function () {
-
             if ( scope.enabled === false ){
                 return;	
             } 
-
             var time = performance.now(),
                 delta = ( time - prevTime ) / 1000;
 

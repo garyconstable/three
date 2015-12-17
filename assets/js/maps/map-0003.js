@@ -12,11 +12,23 @@
 
 
             if(this.width === 0){
+
                 this.map = [
                     ['+', '-', '-', '-', '+'],
                     ['|', ' ', ' ', ' ', 'x'],
                     ['+', '-', '-', '-', '+'],
                 ];
+
+                this.map = [
+                    ['+', '-', '-', 'x', '-', '-', '+'],
+                    ['|', ' ', ' ', ' ', ' ', ' ', '|'],
+                    ['|', ' ', ' ', ' ', ' ', ' ', '|'],
+                    ['x', ' ', ' ', ' ', ' ', ' ', 'x'],
+                    ['|', ' ', ' ', ' ', ' ', ' ', '|'],
+                    ['|', 's', ' ', ' ', ' ', ' ', '|'],
+                    ['+', '-', '-', 'x', '-', '-', '+'],
+                ];
+
             }else{
                 this.map = this.createMaze();
             }
@@ -222,7 +234,6 @@
                 
                 for(var y=0; y<mapArray[x].length; y++){
 
-                    
                     var item = mapArray[x][y];
                     
                     if( item === '+'){
@@ -254,8 +265,8 @@
                     side: THREE.DoubleSide
                 })
             );
-            plane.castShadow = false;
-            plane.receiveShadow = true;
+            // plane.castShadow = false;
+            // plane.receiveShadow = true;
             plane.rotation.x +=  ( 90 * (Math.PI/180) );
             plane.rotation.z +=  ( 90 * (Math.PI/180) );
             plane.position.x += this.horizontalUnit / 2;
@@ -274,11 +285,11 @@
                 new THREE.PlaneGeometry( this.zSize, this.xSize, 50, 50 ),
                 new THREE.MeshPhongMaterial({
                     color: color,
-                    side: THREE.DoubleSide
+                    //side: THREE.BackSide
                 })
             );
-            plane.castShadow = false;
-            plane.receiveShadow = true;
+            // plane.castShadow = false;
+            // plane.receiveShadow = true;
             plane.rotation.x +=  ( 90 * (Math.PI/180) );
             plane.rotation.z +=  ( 90 * (Math.PI/180) );
             plane.position.x += this.horizontalUnit / 2;
@@ -317,31 +328,45 @@
             var z = (row+1) * _this.horizontalUnit - this.zSize * 0.5;
             var x = (col+1) * _this.horizontalUnit - this.xSize * 0.5;
 
-            var spotLight = new THREE.SpotLight(0xffffff, 100, 400);
-            spotLight.position.set(x, (_this.verticalUnit * 0.5 - 100), z);
+            var bluePoint = new THREE.PointLight(0x0033ff, 3, 500);
+            bluePoint.position.set(
+                x - (_this.horizontalUnit * 0.55 ), 
+                (_this.verticalUnit * 0.5 - 10), 
+                z
+            );
+            _this.app.scene.add(bluePoint);
+            _this.app.scene.add(new THREE.PointLightHelper(bluePoint, 3));
 
-            var spotTarget = new THREE.Object3D();
-            spotTarget.position.set(0, 0, 0);
-            spotLight.target = spotTarget;
+            // var loader = new THREE.ObjectLoader();
+            // loader.load( '/assets/js/models/lamp.json', function ( object ) {
+            //     object.scale.set(100,100,100)
+            //     object.position.set(
+            //         x - (_this.horizontalUnit * 0.55 ), 
+            //         (_this.verticalUnit * 0.1 - 0), 
+            //         z
+            //     )
+            //     //object.rotation.z +=  ( 90 * (Math.PI/180) );
+            //     _this.app.scene.add( object );
+            // } );
+        }
 
-            _this.app.scene.add(spotLight);
-            _this.app.scene.add(new THREE.PointLightHelper(spotLight, 1));
-
-            // var greenPoint = new THREE.PointLight(0x33ff00, 1, 150);
-            // greenPoint.position.set( -70, 5, 70 );
-            // this.scene.add(greenPoint);
-            // this.scene.add(new THREE.PointLightHelper(greenPoint, 3));
-
-            //_this.voxelCount++;
+        //set the start position
+        map.prototype.setStartPosition = function(type, row, col){
+            var _this = this;
+            var z = (row+1) * _this.horizontalUnit - this.zSize * 0.5;
+            var x = (col+1) * _this.horizontalUnit - this.xSize * 0.5;
+            // _this.app.scene.rotation.x += ( 90 * (Math.PI/180) ); ;
+            console.log(x, z);
         }
 
         //add voxel
         map.prototype.addVoxel = function(type, row, col) {
             var _this = this;
             switch(type) {
-                case ' ': break;
-                case 'S':
-                    //spawnPoints.push(new THREE.Vector3(x, 0, z));
+                case ' ': 
+                    break;
+                case 's':
+                    _this.setStartPosition(type, row, col);
                     break;
                 case '|':
                 case '+':

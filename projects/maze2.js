@@ -12,7 +12,8 @@
         //app / level / scene settings
         app.prototype.settings = function(){
             
-            this.Map = new map( 0, this, 500, 400 );
+            this.Map = new map( 2, this, 500, 400 );
+            //this.Map = new map( 0, this, 500, 400 );
 
             this.settings = {
                 
@@ -82,17 +83,18 @@
             this.addAmbientLight( this.settings.lights.ambient.color );
             this.loadMap();
             this.addControls();
-            this.renderer.shadowMapEnabled.enabled = true;
-            this.renderer.shadowMapSoft = true;
+            // this.renderer.shadowMapEnabled.enabled = true;
+            // this.renderer.shadowMapSoft = true;
             var _this = this;
 
 
-            var loader = new THREE.ObjectLoader();
-            loader.load( '/assets/js/models/lamp.json', function ( object ) {
-                object.scale.set(100,100,100)
-                console.log(object);
-                _this.scene.add( object );
-            } );
+            // var loader = new THREE.ObjectLoader();
+            // loader.load( '/assets/js/models/lamp.json', function ( object ) {
+            //     object.scale.set(100,100,100)
+            //     object.position.set(0,0,-100)
+            //     console.log(object);
+            //     _this.scene.add( object );
+            // } );
 
         };
 
