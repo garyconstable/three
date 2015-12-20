@@ -18,15 +18,12 @@
     define([], function () {
         
         //the window.app
-        var app = function(){         
-            return this;
-        };
-
+        var app = function(){};
+        
         //init / setup
         app.prototype.init = function() {
             this.width = window.innerWidth;
             this.height = window.innerHeight;
-            this.player = null;
             this.camera = null;
             this.renderer = null;
             this.controls = null;

@@ -8,6 +8,7 @@ var projects = {
     grid            : ['grid'],
     particles       : ['particles'],
     particles_0001  : ['particles_0001'],
+    particles_0002  : ['particles_0002'],
     maze            : ['maze'],
     maze2           : ['maze2'],
     shader_0001     : ['shader_0001'],
@@ -81,6 +82,7 @@ require.config({
         firebase                : '/assets/js/vendor/firebase.2.2.7',
         jquery                  : '/assets/bower_components/jquery/dist/jquery.min',
         three                   : '/assets/bower_components/three.js/three.min',
+        stats                   : '/assets/js/vendor/stats',
 
         //projects
         grid                    : '/projects/grid',
@@ -88,6 +90,7 @@ require.config({
         maze2                    : '/projects/maze2',
         particles               : '/projects/particles',
         particles_0001          : '/projects/particles_0001',
+        particles_0002          : '/projects/particles_0002',
         shader_0001             : '/projects/shader_0001',
         shader_0002             : '/projects/shader_0002',
         voxels                  : '/projects/voxels'
