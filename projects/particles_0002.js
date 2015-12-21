@@ -18,6 +18,8 @@
         stat.domElement.style.top = '0px';
         document.body.appendChild( stat.domElement );
 
+        var start = Date.now();
+
         var uniforms = {
             time: { type: "f", value: 1.0 },
         };
@@ -25,55 +27,87 @@
         var particleCount = 25000;
 
         var fragmentShader = [
-            '/**',
-            ' * Set the colour to a lovely pink.',
-            ' * Note that the color is a 4D Float',
-            ' * Vector, R,G,B and A and each part',
-            ' * runs from 0.0 to 1.0',
-            ' */',
             'void main() {',
             '   gl_FragColor = vec4(',
             '        255.0,  // R',
             '        255.0,  // G',
             '        255.0,  // B',
-            '        1.0   // A',
+            '        1.0     // A',
             '    ); ',
             '}',
         ].join('\n');
 
+        /*
+        //direction is the mouse pos
+        var dir = mousePos;
+
+        //var dir =  new THREE.Vector3(500, 500, 0);   
+
+        dir.sub( _this.pool[i].position).normalize().multiplyScalar(0.10);
+
+        //acceleration
+        _this.pool[i].force = dir;
+
+        //velocity
+        _this.pool[i].velocity.add( _this.pool[i].force );
+
+        //position
+        _this.pool[i].position.add( _this.pool[i].velocity ); 
+        */
 
         var vertexShader = [
+            'attribute vec3 velocity;',
             'uniform float time;',
             'void main() {',
-            '   vec3 newPos = position;',
-            '   newPos.x += time;',
+
+            '   vec3 location = ( position.xyz + velocity ) + time;',
+
             '   gl_PointSize = 1.00;',
-            '   gl_Position = projectionMatrix * modelViewMatrix * vec4( newPos, 1.0 );',
+            '   gl_Position = projectionMatrix * modelViewMatrix * vec4( location, 1.0 );',
             '}',
         ].join('\n');
 
         app.prototype.particles = function(max_particles){
 
+            //self
             var _this = this;
 
+            //material
             var material = new THREE.ShaderMaterial({
                 uniforms: uniforms,
                 vertexShader:   vertexShader,
                 fragmentShader: fragmentShader,
             });
 
+            //geom
             _this.geometry = new THREE.BufferGeometry();
+
+            //position
             _this.particleVertices = new Float32Array( max_particles * 3 ); // position
 
+            //velocity
+            _this.velocity = new Float32Array( max_particles * 3 ); // position
+
             for (var i = 0; i<max_particles; i++){
+
                 //position
                 _this.particleVertices[i * 3 + 0] = Math.floor(Math.random() * 1001) - 500;  
                 _this.particleVertices[i * 3 + 1] = Math.floor(Math.random() * 1001) - 500;  
-                _this.particleVertices[i * 3 + 2] = Math.floor(Math.random() * 1001) - 500;  
+                _this.particleVertices[i * 3 + 2] = Math.floor(Math.random() * 1001) - 500; 
+
+                //velocity
+                _this.velocity[i * 3 + 0] = 0.001;  
+                _this.velocity[i * 3 + 1] = 0.001;  
+                _this.velocity[i * 3 + 2] = 0;   
             }
 
+            //position
             _this.geometry.addAttribute('position', new THREE.BufferAttribute( _this.particleVertices, 3 ));
 
+            //velocity
+            _this.geometry.addAttribute('velocity', new THREE.BufferAttribute( _this.velocity, 3 ));
+
+            //point system
             _this.system = new THREE.Points(
                 _this.geometry,
                 material
@@ -100,7 +134,9 @@
         //renderer
         app.prototype.render = function(){
             var _this = this;
-            uniforms.time.value += 0.05;
+            var t  = 0.0020 * ( Date.now() - start );
+            uniforms.time.value = t;
+            //console.log(t)  
 
             // for( var i = 0; i < _this.pool.length; i++ )
             // { 
