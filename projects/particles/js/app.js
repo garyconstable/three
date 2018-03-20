@@ -172,7 +172,7 @@ app.prototype.render = function(mousePos)
     //move the particles
     for( var i = 0; i < _this.pool.length; i++ )
     {
-        dir.sub( _this.pool[i].position).normalize().multiplyScalar(0.01);
+        dir.sub( _this.pool[i].position).normalize().multiplyScalar(0.4);
 
         //acceleration
         _this.pool[i].force = dir;

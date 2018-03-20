@@ -1,27 +1,27 @@
 
- 		
+
     'use strict';
-    
+
     var app = app || {};
-    
+
 	var App = App || {};
-    
-    
+
+
     app.prototype.cleanup = function(){
         delete this.camera;
         delete this.renderer;
         delete this.controls;
         delete this.scene;
     };
-    
-    
+
+
     //init / setup
     app.prototype.init = function() {
-       
-        //scene must haves 
+
+        //scene must haves
         this.width = window.innerWidth;
         this.height = window.innerHeight;
-        
+
         this.player = null;
         this.camera = null;
         this.renderer = null;
@@ -60,7 +60,7 @@
     //dom events
     app.prototype.events = function(){
         window.onresize = function(event) {
-            App.width = window.innerWidth;	
+            App.width = window.innerWidth;
             App.height = window.innerHeight;
             App.renderer.setSize(App.width, App.height);
             App.camera.aspect = App.width / App.height;
@@ -70,11 +70,11 @@
 
     //add controls
     app.prototype.addControls = function(){
-        
+
         var _this = this;
-        
-        _this.controls = new THREE.PointerLockControls(this.camera, _this);       
-        //_this.player = new player(this);   
+
+        _this.controls = new THREE.PointerLockControls(this.camera, _this);
+        //_this.player = new player(this);
         _this.controls.speedMod = {
             x: 8,
             y: 1,
@@ -90,6 +90,8 @@
     //add a floor
     app.prototype.addFloor = function(){
 
+        console.log( this.sceneObjContainer )
+
         var segments = 1,
             repeat = 200;
 
@@ -100,12 +102,12 @@
 
         var geometry = new THREE.PlaneGeometry(
             this.mazeDimentions.width - this.mazeDimentions.unitSize,
-            this.mazeDimentions.depth, 
-            segments, 
+            this.mazeDimentions.depth,
+            segments,
             segments
         );
 
-        var material = new THREE.MeshLambertMaterial({ 
+        var material = new THREE.MeshLambertMaterial({
                 map: texture,
         });
 
@@ -113,7 +115,7 @@
 
             floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
             floorObj.receiveShadow = true;
-            floorObj.position.set( 
+            floorObj.position.set(
                 (this.mazeDimentions.width / 2 )-this.mazeDimentions.unitSize,
                 0,
                 (this.mazeDimentions.depth / 2 )-(this.mazeDimentions.unitSize/2)
@@ -142,30 +144,37 @@
     };
 
     //touching the scene objects
-    app.prototype.canMoveForward = function(){				
-		
+    app.prototype.canMoveForward = function(){
+
         if ( this.controls ){
-            
+
             var _this = this,
                 _playerWidth = 300;
-        
+
             this.controls.canMoveForward = true;
-        
+
             this.ray.ray.origin.copy( this.controls.getObject().position );
 
-            var intersections = this.ray.intersectObjects( this.sceneObjContainer, true );
+
+    var intersections = this.ray.intersectObjects( this.scene.children, true );
+
+    //==> todo can we find out if the item is a cube ?
+
+    console.log('==> Intersection length', intersections.length );
 
             if ( intersections.length > 0 ) {
 
                 var distance = intersections[ 0 ].distance;
 
-                if ( distance > - _playerWidth && distance < _playerWidth ) {                
+                if ( distance > - _playerWidth && distance < _playerWidth ) {
                     _this.controls.canMoveForward = false;
                 }
             }
+        }else{
+            console.log('not control')
         }
     };
-    
+
     /**
      * load the world ...
      * @returns {app.prototype}
@@ -185,16 +194,16 @@
         //scene objects
         this.addAmbientLight();
         this.addControls();
-        
+
         //add the terain
-        //this.addFloor();
-        
+        this.addFloor();
+
         return this;
     };
-   
+
     app.prototype.animate = function(){
-        
-        if (typeof App.canMoveForward === 'function') { 
+
+        if (typeof App.canMoveForward === 'function') {
             App.scene.updateMatrixWorld();
             App.canMoveForward();
             App.controls.update();
@@ -210,5 +219,3 @@
 
     //A info - world / app obj
     console.log(App);
-
-  
