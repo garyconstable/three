@@ -1,214 +1,247 @@
 
- 		
-    'use strict';
-    
-    var app = app || {};
-    
-	var App = App || {};
-    
-    
-    app.prototype.cleanup = function(){
-        delete this.camera;
-        delete this.renderer;
-        delete this.controls;
-        delete this.scene;
+'use strict';
+
+var app = app || {};
+var App = App || {};
+
+/**
+* Delete existing instances - cleanup
+* ==
+*/
+app.prototype.cleanup = function(){
+    delete this.camera;
+    delete this.renderer;
+    delete this.controls;
+    delete this.scene;
+};
+/**
+* init
+* ==
+*/
+app.prototype.init = function() {
+
+    //scene must haves
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+
+    this.player = null;
+    this.camera = null;
+    this.renderer = null;
+    this.controls = null;
+
+    //containers
+    this.sceneObjContainer = [];
+};
+/**
+* Add the renderer
+* ==
+*/
+app.prototype.createRenderer = function(){
+    this.renderer = new THREE.WebGLRenderer({antialias:true});
+    this.renderer.setSize(this.width, this.height);
+    this.renderer.shadowMapEnabled = true;
+    this.renderer.shadowMapSoft = true;
+    document.body.appendChild(this.renderer.domElement);
+};
+/**
+* Create the scene
+* ==
+*/
+app.prototype.createScene = function(){
+    this.scene = new THREE.Scene();
+    this.scene.fog = new THREE.Fog( 0x000000, 1500, 4000 );
+}
+/**
+* Add a camera
+* ==
+*/
+app.prototype.addCamera = function(){
+    this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000000);
+};
+/**
+* Ambient world light
+* ==
+*/
+app.prototype.addAmbientLight = function(){
+    var ambientLight = new THREE.AmbientLight();
+    this.scene.add(ambientLight);
+}
+/**
+* Dom events
+* ==
+*/
+app.prototype.events = function(){
+    window.onresize = function(event) {
+        App.width = window.innerWidth;
+        App.height = window.innerHeight;
+        App.renderer.setSize(App.width, App.height);
+        App.camera.aspect = App.width / App.height;
+        App.camera.updateProjectionMatrix();
     };
-    
-    
-    //init / setup
-    app.prototype.init = function() {
-       
-        //scene must haves 
-        this.width = window.innerWidth;
-        this.height = window.innerHeight;
-        
-        this.player = null;
-        this.camera = null;
-        this.renderer = null;
-        this.controls = null;
+};
+/**
+* Add some controls
+* ==
+*/
+app.prototype.addControls = function(){
 
-        //containers
-        this.sceneObjContainer = [];
+    var _this = this;
+
+    _this.controls = new THREE.PointerLockControls(this.camera, _this);
+    //_this.player = new player(this);
+    _this.controls.speedMod = {
+        x: 8,
+        y: 1,
+        z: 35,
+        j: 10
     };
+    _this.pointerlockInit();
+    _this.scene.add( this.controls.getObject() );
+    _this.ray = new THREE.Raycaster();
+    _this.ray.ray.direction.set( 0, -1, 0 );
+};
+/**
+* Add the floor
+* ==
+*/
+app.prototype.addFloor = function(){
 
-    //create renderer
-    app.prototype.createRenderer = function(){
-        this.renderer = new THREE.WebGLRenderer({antialias:true});
-        this.renderer.setSize(this.width, this.height);
-        this.renderer.shadowMapEnabled = true;
-        this.renderer.shadowMapSoft = true;
-        document.body.appendChild(this.renderer.domElement);
-    };
+    var segments = 1,
+        repeat = 200;
 
-    //create the scene
-    app.prototype.createScene = function(){
-        this.scene = new THREE.Scene();
-        this.scene.fog = new THREE.Fog( 0x000000, 1500, 4000 );
-    }
+    var texture = THREE.ImageUtils.loadTexture('/img/floor_tile_001.png');
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set( repeat, repeat );
 
-    //add camera
-    app.prototype.addCamera = function(){
-        this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000000);
-    };
+    var geometry = new THREE.PlaneGeometry(
+        this.mazeDimentions.width - this.mazeDimentions.unitSize,
+        this.mazeDimentions.depth,
+        segments,
+        segments
+    );
 
-    //ambient light
-    app.prototype.addAmbientLight = function(){
-        var ambientLight = new THREE.AmbientLight();
-        this.scene.add(ambientLight);
-    }
+    var material = new THREE.MeshLambertMaterial({
+      map: texture,
+    });
 
-    //dom events
-    app.prototype.events = function(){
-        window.onresize = function(event) {
-            App.width = window.innerWidth;	
-            App.height = window.innerHeight;
-            App.renderer.setSize(App.width, App.height);
-            App.camera.aspect = App.width / App.height;
-            App.camera.updateProjectionMatrix();
-        };
-    };
+    var floorObj = new THREE.Mesh(geometry, material);
 
-    //add controls
-    app.prototype.addControls = function(){
-        
-        var _this = this;
-        
-        _this.controls = new THREE.PointerLockControls(this.camera, _this);       
-        //_this.player = new player(this);   
-        _this.controls.speedMod = {
-            x: 8,
-            y: 1,
-            z: 35,
-            j: 10
-        };
-        _this.pointerlockInit();
-        _this.scene.add( this.controls.getObject() );
-        _this.ray = new THREE.Raycaster();
-        _this.ray.ray.direction.set( 0, -1, 0 );
-    };
+    floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+    floorObj.receiveShadow = true;
+    floorObj.position.set(
+        (this.mazeDimentions.width / 2 )-this.mazeDimentions.unitSize,
+        0,
+        (this.mazeDimentions.depth / 2 )-(this.mazeDimentions.unitSize/2)
+    );
 
-    //add a floor
-    app.prototype.addFloor = function(){
+    this.scene.add( floorObj );
+};
+/**
+* Add a skybox
+* ==
+*/
+app.prototype.addSkybox = function(){
 
-        var segments = 1,
-            repeat = 200;
+    // create the geometry sphere
+    var geometry  = new THREE.SphereGeometry( (500*10), 100, 100)
 
-        var texture = THREE.ImageUtils.loadTexture('/img/floor_tile_001.png');
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set( repeat, repeat );
+    var texture = THREE.ImageUtils.loadTexture('/img/starfield.jpg');
+        texture.wrapS = THREE.RepeatWrapping;
 
-        var geometry = new THREE.PlaneGeometry(
-            this.mazeDimentions.width - this.mazeDimentions.unitSize,
-            this.mazeDimentions.depth, 
-            segments, 
-            segments
-        );
+    var material  = new THREE.MeshLambertMaterial({
+      map: texture,
+      side: THREE.BackSide,
+    });
 
-        var material = new THREE.MeshLambertMaterial({ 
-                map: texture,
-        });
+    var skybox = new THREE.Mesh(geometry, material);
+    this.scene.add( skybox );
+    //this.sceneObjContainer.push( skybox );
+};
+/**
+* Can we move forwards - are we touching the maze ?
+* ==
+*/
+app.prototype.canMoveForward = function(){
 
-        var floorObj = new THREE.Mesh(geometry, material);
+    if ( this.controls ){
 
-            floorObj.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-            floorObj.receiveShadow = true;
-            floorObj.position.set( 
-                (this.mazeDimentions.width / 2 )-this.mazeDimentions.unitSize,
-                0,
-                (this.mazeDimentions.depth / 2 )-(this.mazeDimentions.unitSize/2)
-            );
+        var _this = this,
+            _playerWidth = 300;
 
-            this.scene.add( floorObj );
-    };
+        this.controls.canMoveForward = true;
 
-    //sky box
-    app.prototype.addSkybox = function(){
+        //this.ray.ray.origin.copy( this.controls.getObject().position );
 
-        // create the geometry sphere
-        var geometry  = new THREE.SphereGeometry( (500*10), 100, 100)
+        this.ray.setFromCamera(  this.controls.getObject().position, this.camera );
+        var intersections = this.ray.intersectObjects( this.sceneObjContainer, true );
 
-        var texture = THREE.ImageUtils.loadTexture('/img/starfield.jpg');
-            texture.wrapS = THREE.RepeatWrapping;
+        if ( intersections.length > 0 ) {
 
-        var material  = new THREE.MeshLambertMaterial({
-          map: texture,
-          side: THREE.BackSide,
-        });
+            var distance = intersections[ 0 ].distance;
 
-        var skybox = new THREE.Mesh(geometry, material);
-        this.scene.add( skybox );
-        this.sceneObjContainer.push( skybox );
-    };
+            for( var i = 0; i < intersections.length; i++){
 
-    //touching the scene objects
-    app.prototype.canMoveForward = function(){				
-		
-        if ( this.controls ){
-            
-            var _this = this,
-                _playerWidth = 300;
-        
-            this.controls.canMoveForward = true;
-        
-            this.ray.ray.origin.copy( this.controls.getObject().position );
+                if( intersections[i].object.name == "wall_cube" ){
 
-            var intersections = this.ray.intersectObjects( this.sceneObjContainer, true );
+                    // console.log(_playerWidth)
+                    // console.log(intersections[i]);
 
-            if ( intersections.length > 0 ) {
-
-                var distance = intersections[ 0 ].distance;
-
-                if ( distance > - _playerWidth && distance < _playerWidth ) {                
-                    _this.controls.canMoveForward = false;
+                    // if ( distance > _playerWidth && distance < _playerWidth ) {
+                    //     console.log(1)
+                    //     _this.controls.canMoveForward = false;
+                    // }
+                    //
+                    // if ( distance > _playerWidth  ) {
+                    //   console.log(2)
+                    //   _this.controls.canMoveForward = false;
+                    // }
                 }
             }
         }
-    };
-    
-    /**
-     * load the world ...
-     * @returns {app.prototype}
-     */
-    app.prototype.loadWorld = function(){
+    }
+};
+/**
+* load the world ...
+* ==
+*/
+app.prototype.loadWorld = function(){
 
-        //must haves
-        this.events();
-        this.init();
-        this.createRenderer();
-        this.createScene();
-        this.addCamera();
+    //must haves
+    this.events();
+    this.init();
+    this.createRenderer();
+    this.createScene();
+    this.addCamera();
 
-        //load the world map
-        this.loadMap();
+    //load the world map
+    this.loadMap();
 
-        //scene objects
-        this.addAmbientLight();
-        this.addControls();
-        
-        //add the terain
-        //this.addFloor();
-        
-        return this;
-    };
-   
-    app.prototype.animate = function(){
-        
-        if (typeof App.canMoveForward === 'function') { 
-            App.scene.updateMatrixWorld();
-            App.canMoveForward();
-            App.controls.update();
-            App.renderer.render( App.scene, App.camera );
-            requestAnimationFrame( App.animate );
-        }
-    };
+    //scene objects
+    this.addAmbientLight();
+    this.addControls();
 
-    //create object and run
-    App = new app().loadWorld();
-    App.animate();
-
-
-    //A info - world / app obj
-    console.log(App);
-
-  
+    //add the terain
+    this.addFloor();
+    return this;
+};
+/**
+ * Animate
+ * ==
+ */
+app.prototype.animate = function(){
+    if (typeof App.canMoveForward === 'function') {
+        App.scene.updateMatrixWorld();
+        App.canMoveForward();
+        App.controls.update();
+        App.renderer.render( App.scene, App.camera );
+        requestAnimationFrame( App.animate );
+    }
+};
+/**
+ * Instanciate
+ * ==
+ */
+App = new app().loadWorld();
+App.animate();
+console.log(App);
