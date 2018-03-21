@@ -17,6 +17,7 @@
 
         $("#pageLoad").load("/projects/maze/maze.html");
 
+
         $('#projectSelect').change(function(e){
 
           if( $(this).val() !== 0  && $(this).val() !== '0'){

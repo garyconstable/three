@@ -172,7 +172,7 @@ app.prototype.render = function(mousePos)
     //move the particles
     for( var i = 0; i < _this.pool.length; i++ )
     {
-        dir.sub( _this.pool[i].position).normalize().multiplyScalar(0.4);
+        dir.sub( _this.pool[i].position ).normalize().multiplyScalar(0.01);
 
         //acceleration
         _this.pool[i].force = dir;
@@ -191,8 +191,8 @@ app.prototype.render = function(mousePos)
         */
     }
 
-    _this.system.position.x = mousePos.x;
-    _this.system.position.z = mousePos.y;
+    //_this.system.position.x = mousePos.x;
+    //_this.system.position.z = mousePos.y;
 
     _this.geometry.verticesNeedUpdate = true;
     _this.geometry.colorsNeedsUpdate = true;
