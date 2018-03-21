@@ -297,5 +297,5 @@ app.prototype.loadMap = function()
 			}
 		}
 	}
-	console.log(this.sceneObjContainer)
+	//console.log(this.sceneObjContainer)
 };

@@ -57,6 +57,20 @@ app.prototype.createScene = function(){
 */
 app.prototype.addCamera = function(){
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000000);
+    var geometry = new THREE.SphereGeometry( 5, 32, 32 );
+    var material = new THREE.MeshBasicMaterial( {color: 0x544660} );
+    var sphere = new THREE.Mesh( geometry, material );
+    this.scene.add( sphere );
+    this.camera.add(sphere);
+    sphere.position.set(0,0,-100);
+
+
+
+
+    geometry = new THREE.SphereGeometry( 5, 32, 32 );
+    material = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
+    this.marker = new THREE.Mesh( geometry, material );
+    this.scene.add( this.marker );
 };
 /**
 * Ambient world light
@@ -141,19 +155,15 @@ app.prototype.addFloor = function(){
 * Add a skybox
 * ==
 */
-app.prototype.addSkybox = function(){
-
-    // create the geometry sphere
+app.prototype.addSkybox = function()
+{
     var geometry  = new THREE.SphereGeometry( (500*10), 100, 100)
-
     var texture = THREE.ImageUtils.loadTexture('/img/starfield.jpg');
         texture.wrapS = THREE.RepeatWrapping;
-
     var material  = new THREE.MeshLambertMaterial({
       map: texture,
       side: THREE.BackSide,
     });
-
     var skybox = new THREE.Mesh(geometry, material);
     this.scene.add( skybox );
     //this.sceneObjContainer.push( skybox );
@@ -164,43 +174,27 @@ app.prototype.addSkybox = function(){
 */
 app.prototype.canMoveForward = function(){
 
-    if ( this.controls ){
-
+    if ( this.controls )
+    {
         var _this = this,
             _playerWidth = 300;
 
         this.controls.canMoveForward = true;
 
-        //this.ray.ray.origin.copy( this.controls.getObject().position );
+        //  this.ray.setFromCamera(  this.controls.getObject().position, this.camera );
 
-        this.ray.setFromCamera(  this.controls.getObject().position, this.camera );
-        var intersections = this.ray.intersectObjects( this.sceneObjContainer, true );
+        this.ray.setFromCamera(  new THREE.Vector3(0,0,0) , this.camera );
 
-        if ( intersections.length > 0 ) {
+        var intersections = this.ray.intersectObjects( this.sceneObjContainer );
 
+        if ( intersections.length > 0 )
+        {
             var distance = intersections[ 0 ].distance;
-
-            for( var i = 0; i < intersections.length; i++){
-
-                if( intersections[i].object.name == "wall_cube" ){
-
-                    // console.log(_playerWidth)
-                    // console.log(intersections[i]);
-
-                    // if ( distance > _playerWidth && distance < _playerWidth ) {
-                    //     console.log(1)
-                    //     _this.controls.canMoveForward = false;
-                    // }
-                    //
-                    // if ( distance > _playerWidth  ) {
-                    //   console.log(2)
-                    //   _this.controls.canMoveForward = false;
-                    // }
-                }
-            }
-        }else{
-            console.log('not control')
+            //console.log( intersections[0] );
+            //console.log( distance );
+            this.marker.position.set(intersections[0].point.x,intersections[0].point.y, intersections[0].point.z);
         }
+        //_this.controls.canMoveForward = false;
     }
 };
 /**
