@@ -1,12 +1,12 @@
 
-    'use strict';
-    
-    var app = app || {};
-    
-	var App = App || {};
-    
+'use strict';
+
+var app = app || {};
+
+var App = App || {};
+
     /**
-     * 
+     *
      * @returns {undefined}
      */
     app.prototype.pointerlockInit = function(){
@@ -19,7 +19,7 @@
         var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
         if ( havePointerLock ) {
-            
+
             var element = document.body;
             var pointerlockchange = function ( event ) {
 
@@ -28,7 +28,7 @@
                     blocker.style.display = 'none';
                     document.getElementById('sidebar').style.left = '-255px';
                     document.getElementById('console').style.right = '-450px';
-                } else {                  
+                } else {
                     document.getElementById('sidebar').style.left = '0';
                     document.getElementById('console').style.right = '15px';
 
