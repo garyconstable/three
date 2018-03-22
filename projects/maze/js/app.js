@@ -18,8 +18,8 @@ app.prototype.cleanup = function(){
 * init
 * ==
 */
-app.prototype.init = function() {
-
+app.prototype.init = function()
+{
     //scene must haves
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -57,15 +57,15 @@ app.prototype.createScene = function(){
 */
 app.prototype.addCamera = function(){
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000000);
+
     var geometry = new THREE.SphereGeometry( 5, 32, 32 );
     var material = new THREE.MeshBasicMaterial( {color: 0x544660} );
-    var sphere = new THREE.Mesh( geometry, material );
-    this.scene.add( sphere );
-    this.camera.add(sphere);
-    sphere.position.set(0,0,-100);
+    this.sphere = new THREE.Mesh( geometry, material );
+    this.scene.add( this.sphere );
+    this.camera.add( this.sphere );
+    this.sphere.position.set(0,0,-100);
 
-
-
+    console.log( this.sphere.geometry )
 
     geometry = new THREE.SphereGeometry( 5, 32, 32 );
     material = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
@@ -181,6 +181,33 @@ app.prototype.canMoveForward = function(){
 
         this.controls.canMoveForward = true;
 
+        var originPoint = this.sphere.position.clone();
+
+        var found = false;
+
+    	for (var vertexIndex = 0; vertexIndex <  this.sphere.geometry.vertices.length; vertexIndex++ )
+    	{
+    		var localVertex = this.sphere.geometry.vertices[vertexIndex].clone();
+    		var globalVertex = localVertex.applyMatrix4( this.sphere.matrix );
+            var directionVector = globalVertex.sub( this.sphere.position );
+    		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+    		var collisionResults = ray.intersectObjects( this.sceneObjContainer );
+
+        	if ( collisionResults.length > 0  && !found ){
+                console.log( collisionResults[0].distance, directionVector.length()  )
+                this.marker.position.set(collisionResults[0].point.x,collisionResults[0].point.y, collisionResults[0].point.z);
+                found = true;
+            }
+
+    		// if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ){
+            //     console.log( collisionResults )
+            //
+            // }
+    	}
+
+
+
+        /*
         //  this.ray.setFromCamera(  this.controls.getObject().position, this.camera );
 
         this.ray.setFromCamera(  new THREE.Vector3(0,0,0) , this.camera );
@@ -189,12 +216,15 @@ app.prototype.canMoveForward = function(){
 
         if ( intersections.length > 0 )
         {
+            console.log(intersections);
+
             var distance = intersections[ 0 ].distance;
             //console.log( intersections[0] );
             //console.log( distance );
             this.marker.position.set(intersections[0].point.x,intersections[0].point.y, intersections[0].point.z);
         }
         //_this.controls.canMoveForward = false;
+        */
     }
 };
 /**
