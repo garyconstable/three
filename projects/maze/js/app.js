@@ -210,7 +210,7 @@ app.prototype.canMoveForward = function(){
     }
     var rayCaster = new THREE.Raycaster( this.controls.getObject().position, cameraDirection);
 
-    var intersections = rayCaster.ray.intersectObjects( this.sceneObjContainer, true );
+    var intersections = rayCaster.intersectObjects( this.sceneObjContainer, true );
 
     console.log(rayCaster.ray)
 
