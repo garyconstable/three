@@ -285,8 +285,8 @@ app.prototype.canMoveForward = function(){
             console.log(intersections);
 
             var distance = intersections[ 0 ].distance;
-            //console.log( intersections[0] );
-            //console.log( distance );
+            console.log( intersections.length, distance );
+
             this.marker.position.set(intersections[0].point.x,intersections[0].point.y, intersections[0].point.z);
         }
         //_this.controls.canMoveForward = false;
