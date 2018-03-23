@@ -174,6 +174,72 @@ app.prototype.addSkybox = function()
 */
 app.prototype.canMoveForward = function(){
 
+    // https://stackoverflow.com/questions/18546875/three-js-pointerlock-and-collision-detection
+    //
+
+    //console.log( this.controls )
+    /*
+    THREE.PointerLockControls {speedMod: {…}, canMoveForward: true, enabled: false, getObject: ƒ, isOnObject: ƒ, …}canMoveForward: trueenabled: falsegetDirection: ƒ ( v )arguments: nullcaller: nulllength: 1name: ""prototype: {constructor: ƒ}__proto__: ƒ ()[[FunctionLocation]]: VM224:141[[Scopes]]: Scopes[3]getObject: ƒ ()arguments: nullcaller: nulllength: 0name: ""prototype: {constructor: ƒ}__proto__: ƒ ()[[FunctionLocation]]: VM224:121[[Scopes]]: Scopes[2]isOnObject: ƒ ( boolean )arguments: nullcaller: nulllength: 1name: ""prototype: {constructor: ƒ}__proto__: ƒ ()[[FunctionLocation]]: VM224:127[[Scopes]]: Scopes[2]speedMod: j: 10x: 8y: 1z: 35__proto__: Objectupdate: ƒ ()arguments: nullcaller: nulllength: 0name: ""prototype: {constructor: ƒ}__proto__: ƒ ()[[FunctionLocation]]: VM224:153[[Scopes]]: Scopes[2]__proto__: Object
+    app-base.js:26
+    */
+    //console.log( this.controls.isMovingForwards() )
+
+
+    var rotationMatrix;
+    var cameraDirection = this.controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
+
+    if ( this.controls.isMovingForwards() ) {
+    }
+    else if ( this.controls.isMovingBackwards() ) {
+        rotationMatrix = new THREE.Matrix4();
+        rotationMatrix.makeRotationY(180 * Math.PI / 180);
+    }
+    else if (this.controls.isMovingLeft()) {
+        rotationMatrix = new THREE.Matrix4();
+        rotationMatrix.makeRotationY(90 * Math.PI / 180);
+    }
+    else if (this.controls.isMovingRight()) {
+        rotationMatrix = new THREE.Matrix4();
+        rotationMatrix.makeRotationY((360-90) * Math.PI / 180);
+    }
+    else {
+        return;
+    }
+    if (rotationMatrix !== undefined){
+        cameraDirection.applyMatrix4(rotationMatrix);
+    }
+    var rayCaster = new THREE.Raycaster( this.controls.getObject().position, cameraDirection);
+
+    var intersections = rayCaster.ray.intersectObjects( this.sceneObjContainer, true );
+
+    console.log(rayCaster.ray)
+
+    /*
+    var _this = this,
+        _playerWidth = 300;
+
+    this.controls.canMoveForward = true;
+    this.ray.ray.origin.copy( this.controls.getObject().position );
+
+    var intersections = this.ray.intersectObjects( this.sceneObjContainer, true );
+
+    if ( intersections.length > 0 ) {
+
+        var distance = intersections[ 0 ].distance;
+
+        if ( distance > - _playerWidth && distance < _playerWidth ) {
+        	_this.controls.canMoveForward = false;
+        }
+    }
+    */
+
+
+    // var intersects = rayCaster.intersectObject( this.sceneObjContainer , true);
+    //
+    // console.log(intersects)
+
+
+    /*
     if ( this.controls )
     {
         var _this = this,
@@ -225,7 +291,8 @@ app.prototype.canMoveForward = function(){
         }
         //_this.controls.canMoveForward = false;
         */
-    }
+
+    //}
 };
 /**
 * load the world ...

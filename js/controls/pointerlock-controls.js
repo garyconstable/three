@@ -6,7 +6,7 @@ THREE.PointerLockControls = function ( camera, App ) {
 
 	var scope = this;
 		camera.rotation.set( 0, 0, 0 );
-		
+
 	var	pitchObject = new THREE.Object3D();
 		pitchObject.add( camera ),
 		yawObject = new THREE.Object3D();
@@ -29,9 +29,27 @@ THREE.PointerLockControls = function ( camera, App ) {
 			j: 1
 		};
 
-		this.canMoveForward = true;	
+		this.canMoveForward = true;
 
 
+		this.moveForward = false;
+		this.moveBackward = false;
+		this.moveLeft = false;
+		this.moveRight = false;
+
+
+	this.isMovingForwards = function(){
+		return moveForward;
+	}
+	this.isMovingBackwards = function(){
+		return moveBackward;
+	}
+	this.isMovingLeft = function(){
+		return moveLeft;
+	}
+	this.isMovingRight = function(){
+		return moveRight;
+	}
 
 	var onMouseMove = function ( event ) {
 
@@ -55,24 +73,29 @@ THREE.PointerLockControls = function ( camera, App ) {
 			case 38: // up
 			case 87: // w
 				moveForward = true;
+				this.moveForward = true;
 				break;
 
 			case 37: // left
 			case 65: // a
-				moveLeft = true; break;
+				moveLeft = true;
+				this.moveLeft = true;
+				break;
 
 			case 40: // down
 			case 83: // s
 				moveBackward = true;
+				this.moveBackward = true;
 				break;
 
 			case 39: // right
 			case 68: // d
 				moveRight = true;
+				this.moveRight = true;
 				break;
 
 			case 32: // space
-				if ( canJump === true ){ 
+				if ( canJump === true ){
 					velocity.y += 500;
 				}
 				canJump = false;
@@ -91,21 +114,25 @@ THREE.PointerLockControls = function ( camera, App ) {
 			case 38: // up
 			case 87: // w
 				moveForward = false;
+				this.moveForward = false;
 				break;
 
 			case 37: // left
 			case 65: // a
 				moveLeft = false;
+				this.moveLeft = false;
 				break;
 
 			case 40: // down
 			case 83: // s
 				moveBackward = false;
+				this.moveBackward = false;
 				break;
 
 			case 39: // right
 			case 68: // d
 				moveRight = false;
+				this.moveRight = false;
 				break;
 
 		}
@@ -153,15 +180,15 @@ THREE.PointerLockControls = function ( camera, App ) {
 	this.update = function () {
 
 		if ( scope.enabled === false ){
-			return;	
-		} 
+			return;
+		}
 
 		var time = performance.now(),
 			delta = ( time - prevTime ) / 1000;
 
 			velocity.x -= velocity.x * 10.0 * delta;
 			velocity.z -= velocity.z * 10.0 * delta;
-			velocity.y -= 9.8 * 100.0 * delta; 
+			velocity.y -= 9.8 * 100.0 * delta;
 
 		if ( moveForward && this.canMoveForward === true ) {
 			velocity.z -= ( 400.0 * this.speedMod.z ) * delta;
@@ -184,7 +211,7 @@ THREE.PointerLockControls = function ( camera, App ) {
 		}
 
 		yawObject.translateX( velocity.x * delta );
-		yawObject.translateY( velocity.y * delta ); 
+		yawObject.translateY( velocity.y * delta );
 		yawObject.translateZ( velocity.z * delta );
 
 		if ( yawObject.position.y < 10 ) {
